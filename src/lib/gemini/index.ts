@@ -52,6 +52,6 @@ Respond with valid JSON only, no markdown or code fences.
     const json = JSON.parse(response.text);
     return { id: nanoid(), ...json };
   } catch (e) {
-    throw new Error('Failed to parse JSON from AI response');
+    throw new Error(`Failed to parse JSON from AI response: ${e}`);
   }
 }
