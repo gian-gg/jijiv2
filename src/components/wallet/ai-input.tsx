@@ -12,46 +12,41 @@ export function AiInput() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle AI query submission
-    console.log('Query:', query);
+    console.log('Input:', query);
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
-      <form onSubmit={handleSubmit} className="relative">
-        <div className="bg-card border-primary/20 hover:border-primary/40 focus-within:border-primary relative flex items-center gap-2 rounded-2xl border-2 p-2 shadow-lg transition-colors focus-within:shadow-xl">
-          <div className="pl-3">
-            <Sparkles className="text-primary h-5 w-5" />
-          </div>
+    <div className="space-y-3">
+      <form onSubmit={handleSubmit}>
+        <div className="bg-card flex items-center gap-3 rounded-lg border p-3">
+          <Sparkles className="text-muted-foreground h-5 w-5 flex-shrink-0" />
 
           <Input
             type="text"
-            placeholder="Ask me anything... 'How much did I spend on groceries?' or 'Show my monthly savings'"
+            placeholder='Add transaction or ask a question... e.g. "coffee for $5"'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="placeholder:text-muted-foreground flex-1 border-0 bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="flex-1 border-0 bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
 
-          <Button type="submit" size="lg" className="gap-2 rounded-xl px-6">
-            Ask AI
-            <ArrowRight className="h-4 w-4" />
+          <Button type="submit" size="sm">
+            Submit
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </form>
 
-      {/* Quick Suggestions */}
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
+      <div className="flex flex-wrap gap-2">
         {[
-          'Show my spending trends',
-          'Budget for next month',
-          'Largest expenses this week',
-          'Investment performance',
+          'coffee for $5',
+          'uber ride for $15',
+          'Show spending trends',
+          'Monthly budget analysis',
         ].map((suggestion) => (
           <Button
             key={suggestion}
             variant="outline"
             size="sm"
-            className="rounded-full bg-transparent text-xs"
             onClick={() => setQuery(suggestion)}
           >
             {suggestion}

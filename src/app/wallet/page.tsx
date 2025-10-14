@@ -1,36 +1,36 @@
-import { Header } from '@/components/wallet/header';
 import { AiInput } from '@/components/wallet/ai-input';
 import { FinancialOverview } from '@/components/wallet/financial-overview';
 import { RecentTransactions } from '@/components/wallet/recent-transactions';
-import { QuickActions } from '@/components/wallet/quick-actions';
+import { NotificationsPopover } from '@/components/wallet/notifications-popover';
+import { AccountPopover } from '@/components/wallet/account-popover';
 
-export default function Wallet() {
+export default function Home() {
   return (
-    <div className="bg-background min-h-screen">
-      <Header />
+    <div className="bg-background flex min-h-screen w-full flex-col items-center">
+      {/* Top Navigation */}
+      <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex w-full items-center justify-between border-b px-20 py-2 backdrop-blur">
+        <h1 className="text-xl font-semibold">jiji</h1>
 
-      <main className="container mx-auto max-w-7xl px-4 py-8">
-        {/* Hero Section with AI Input */}
-        <section className="mb-12">
-          <div className="mb-8 text-center">
-            <h1 className="mb-4 text-4xl font-bold text-balance md:text-5xl lg:text-6xl">
-              Your AI-Powered
-              <span className="text-primary"> Finance Assistant</span>
-            </h1>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-lg text-pretty md:text-xl">
-              Ask anything about your finances. Track expenses, analyze
-              spending, and get intelligent insights.
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
+          <NotificationsPopover />
+          <AccountPopover />
+        </div>
+      </header>
 
-          <AiInput />
-        </section>
+      {/* Main Content */}
+      <main className="mt-4 flex flex-col gap-4">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-semibold tracking-tight">Dashboard</h2>
+          <p className="text-muted-foreground">
+            Track and manage your financial transactions
+          </p>
+        </div>
+
+        {/* AI Input */}
+        <AiInput />
 
         {/* Financial Overview */}
         <FinancialOverview />
-
-        {/* Quick Actions */}
-        <QuickActions />
 
         {/* Recent Transactions */}
         <RecentTransactions />
