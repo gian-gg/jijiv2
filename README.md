@@ -1,3 +1,3 @@
 # jiji v2
 
-first ai powered project cuz bored lol
+![Tech](https://skills-icons.vercel.app/api/icons?i=react,ts,vite,axios,tailwind,shadcnui,lucide)
