@@ -25,7 +25,7 @@ const SignOut = () => {
     });
   }
   return (
-    <Button onClick={handleSignOut} disabled={isPending}>
+    <Button variant="ghost" onClick={handleSignOut} disabled={isPending}>
       <LogOut /> Sign Out
     </Button>
   );

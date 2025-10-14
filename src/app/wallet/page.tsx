@@ -2,7 +2,7 @@ import { AiInput } from '@/components/wallet/ai-input';
 import { FinancialOverview } from '@/components/wallet/financial-overview';
 import { RecentTransactions } from '@/components/wallet/recent-transactions';
 import { NotificationsPopover } from '@/components/wallet/notifications-popover';
-import { AccountPopover } from '@/components/wallet/account-popover';
+import SignOut from '@/components/auth/sign-out';
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
 
         <div className="flex items-center gap-2">
           <NotificationsPopover />
-          <AccountPopover />
+          <SignOut />
         </div>
       </header>
 
