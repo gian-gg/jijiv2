@@ -1,30 +1,50 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import type { Transaction } from '@/type';
 
-export function FinancialOverview() {
-  const stats = [
+function getStats(transactions: Transaction[]) {
+  const income = transactions
+    .filter((t) => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const expenses = transactions
+    .filter((t) => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const balance = income - expenses;
+
+  // For demo, change and trend are placeholders.
+  return [
     {
       title: 'Total Balance',
-      value: '$24,582.50',
-      change: '+12.5%',
-      trend: 'up',
+      value: `$${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      change: '', // You can calculate change if you have previous month data
+      trend: balance >= 0 ? 'up' : 'down',
       icon: Wallet,
     },
     {
       title: 'Monthly Income',
-      value: '$8,420.00',
-      change: '+8.2%',
+      value: `$${income.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      change: '',
       trend: 'up',
       icon: TrendingUp,
     },
     {
       title: 'Monthly Expenses',
-      value: '$4,285.30',
-      change: '-3.1%',
+      value: `$${expenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      change: '',
       trend: 'down',
       icon: TrendingDown,
     },
   ];
+}
+
+export function FinancialOverview({
+  transactions,
+}: {
+  transactions: Transaction[];
+}) {
+  const stats = getStats(transactions);
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -41,7 +61,7 @@ export function FinancialOverview() {
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-muted-foreground mt-1 text-xs">
-                {stat.change} from last month
+                {stat.change ? `${stat.change} from last month` : ''}
               </p>
             </CardContent>
           </Card>

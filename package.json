@@ -12,6 +12,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@google/genai": "^1.24.0",
+    "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-popover": "^1.1.15",
@@ -23,6 +25,7 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
     "lucide-react": "^0.544.0",
+    "nanoid": "^5.1.6",
     "next": "15.5.4",
     "postgres": "^3.4.7",
     "react": "19.1.0",

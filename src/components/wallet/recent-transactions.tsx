@@ -1,52 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingBag, Coffee, Home, Zap, TrendingUp } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { Transaction } from '@/type';
 
-export function RecentTransactions() {
-  const transactions = [
-    {
-      id: 1,
-      name: 'Grocery Store',
-      category: 'Shopping',
-      amount: -125.5,
-      date: 'Today, 2:30 PM',
-      icon: ShoppingBag,
-    },
-    {
-      id: 2,
-      name: 'Coffee Shop',
-      category: 'Food & Drink',
-      amount: -8.5,
-      date: 'Today, 9:15 AM',
-      icon: Coffee,
-    },
-    {
-      id: 3,
-      name: 'Rent Payment',
-      category: 'Housing',
-      amount: -1850.0,
-      date: 'Yesterday',
-      icon: Home,
-    },
-    {
-      id: 4,
-      name: 'Electricity Bill',
-      category: 'Utilities',
-      amount: -95.2,
-      date: '2 days ago',
-      icon: Zap,
-    },
-    {
-      id: 5,
-      name: 'Freelance Payment',
-      category: 'Income',
-      amount: 2500.0,
-      date: '3 days ago',
-      icon: TrendingUp,
-    },
-  ];
-
+export function RecentTransactions(props: { transactions: Transaction[] }) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -57,36 +15,42 @@ export function RecentTransactions() {
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y">
-          {transactions.map((transaction) => {
-            const Icon = transaction.icon;
+          {props.transactions.map((transaction) => {
+            const Icon = DollarSign;
             return (
               <div
                 key={transaction.id}
                 className="flex items-center justify-between p-4"
               >
-                <div className="flex items-center gap-3">
-                  <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-lg">
-                    <Icon className="text-muted-foreground h-5 w-5" />
+                <div className="flex w-full items-center gap-4">
+                  <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-lg">
+                    <Icon className="text-muted-foreground h-6 w-6" />
                   </div>
-                  <div>
-                    <p className="font-medium">{transaction.name}</p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {transaction.category}
-                      </Badge>
-                      <span className="text-muted-foreground text-xs">
-                        {transaction.date}
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex items-center justify-between">
+                      <p className="truncate font-semibold">
+                        {transaction.description}
+                      </p>
+                      <span
+                        className={`ml-4 font-semibold tabular-nums ${transaction.amount > 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-400'}`}
+                      >
+                        {transaction.amount > 0 ? '+' : '-'}$
+                        {Math.abs(transaction.amount).toFixed(2)}
                       </span>
+                    </div>
+                    <div className="text-muted-foreground mt-1 flex items-center gap-2 text-xs">
+                      <Badge variant="secondary" className="text-xs capitalize">
+                        {transaction.type}
+                      </Badge>
+                      {transaction.category && (
+                        <span className="bg-muted text-muted-foreground rounded px-2 py-0.5">
+                          {transaction.category}
+                        </span>
+                      )}
+                      <span className="ml-auto">{transaction.date}</span>
                     </div>
                   </div>
                 </div>
-
-                <span
-                  className={`font-semibold tabular-nums ${transaction.amount > 0 ? 'text-green-600 dark:text-green-500' : ''}`}
-                >
-                  {transaction.amount > 0 ? '+' : ''}$
-                  {Math.abs(transaction.amount).toFixed(2)}
-                </span>
               </div>
             );
           })}

@@ -6,13 +6,35 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { parseFinancePrompt } from '@/lib/gemini';
+import type { Transaction } from '@/type';
 
-export function AiInput() {
+export function AiInput(props: {
+  transactions: Transaction[];
+  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+}) {
   const [query, setQuery] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Input:', query);
+
+    const res = await parseFinancePrompt(query);
+    if (res && res.description && res.amount) {
+      props.setTransactions((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          description: res.description,
+          amount: res.amount,
+          date: new Date().toISOString().split('T')[0],
+          type: res.type ?? 'expense',
+          category: res.category ?? 'Other',
+          payment_method: res.payment_method ?? 'Unknown',
+        },
+      ]);
+    }
+    console.log(res);
+    setQuery('');
   };
 
   return (
