@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
-import type { Transaction } from '@/type';
+import type { Transaction } from '@/types/transactions';
 
 function getStats(transactions: Transaction[]) {
   const income = transactions

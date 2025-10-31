@@ -3,7 +3,7 @@
 import geminiClient from '@/lib/gemini';
 import { GEMINI_MODEL, WALLET_PROMPT } from '@/constants/GEMINI';
 import { parseGeminiResponse } from '@/lib/gemini/utils';
-import type { Transaction } from '@/type';
+import type { Transaction } from '@/types/transactions';
 
 export async function parseFinancePrompt(prompt: string) {
   const ai = await geminiClient();

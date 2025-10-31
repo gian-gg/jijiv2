@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { AiInput } from '@/components/wallet/ai-input';
 import { FinancialOverview } from '@/components/wallet/financial-overview';
 import { RecentTransactions } from '@/components/wallet/recent-transactions';
-import type { Transaction } from '@/type';
+import type { Transaction } from '@/types/transactions';
 
 export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { Transaction } from '@/type';
+import type { Transaction } from '@/types/transactions';
 
 export function RecentTransactions(props: { transactions: Transaction[] }) {
   return (

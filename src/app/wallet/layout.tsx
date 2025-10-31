@@ -12,9 +12,10 @@ export default async function DashboardLayout({
   if (!session) {
     redirect('/');
   }
+
   return (
     <div className="bg-muted flex min-h-screen w-full flex-col items-center justify-between">
-      <Header />
+      <Header user={session.user} />
 
       {/* Main Content */}
       <main className="mt-4 mb-20 flex h-full w-4xl flex-1 flex-col gap-4 p-8">

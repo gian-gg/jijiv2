@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { parseFinancePrompt } from '@/lib/gemini/wallet';
-import type { Transaction } from '@/type';
+import type { Transaction } from '@/types/transactions';
 
 export function AiInput(props: {
   transactions: Transaction[];
