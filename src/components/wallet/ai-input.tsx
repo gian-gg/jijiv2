@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
-import { parseFinancePrompt } from '@/lib/gemini';
+import { parseFinancePrompt } from '@/lib/gemini/wallet';
 import type { Transaction } from '@/type';
 
 export function AiInput(props: {
