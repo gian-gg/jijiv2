@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <div className="space-y-1">
-        <h2 className="text-3xl font-semibold tracking-tight">Dashboard</h2>
+        <h2 className="text-3xl font-semibold tracking-tight">Wallet</h2>
         <p className="text-muted-foreground">
           Track and manage your financial transactions
         </p>
