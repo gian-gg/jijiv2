@@ -47,7 +47,7 @@ export function FinancialOverview({
 
   return (
     <div className="grid grid-cols-3 gap-3">
-      {stats.map((stat, index) => {
+      {stats.map((stat) => {
         const Icon = stat.icon;
         return (
           <div
