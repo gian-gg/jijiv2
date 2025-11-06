@@ -15,17 +15,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="border-border bg-card flex h-full w-full flex-1 flex-col overflow-hidden border md:h-[90vh] md:max-w-2xl">
-      <div className="border-border flex items-center justify-between border-b px-6 py-4">
-        <div className="flex items-center gap-3">
-          <div className="bg-primary/10 border-primary/20 flex h-10 w-10 items-center justify-center border">
-            <span className="text-primary text-lg font-bold">j</span>
-          </div>
-          <h1 className="text-xl font-bold tracking-tight">jiji</h1>
-        </div>
+    <div className="border-primary/20 bg-card flex h-full w-full flex-1 flex-col overflow-hidden border md:h-[90vh] md:max-w-2xl">
+      {/* Subtle gradient background */}
+      <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
 
-        <Header user={session.user} />
-      </div>
+      <Header user={session.user} />
 
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
         {children}

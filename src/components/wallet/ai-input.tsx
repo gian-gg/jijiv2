@@ -54,7 +54,7 @@ export function AiInput(props: {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="border-border bg-card hover:border-primary/30 focus-within:glow-purple focus-within:border-primary/50 group flex items-center gap-2 border p-3 shadow-sm transition-all duration-300">
+        <div className="bg-background/40 border-border hover:border-primary/30 focus-within:glow-purple focus-within:border-primary/50 group flex items-center gap-2 border p-3 shadow-sm transition-all duration-300">
           <div className="bg-primary/10 border-primary/20 group-focus-within:border-primary/40 flex h-8 w-8 flex-shrink-0 items-center justify-center border transition-colors">
             <Sparkles className="text-primary h-4 w-4" />
           </div>

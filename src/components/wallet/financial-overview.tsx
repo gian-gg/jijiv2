@@ -52,12 +52,12 @@ export function FinancialOverview({
         return (
           <div
             key={stat.title}
-            className="border-border relative overflow-hidden border p-3"
+            className="bg-background/40 border-border relative overflow-hidden border p-3"
           >
             <div className="relative flex flex-col gap-2">
               {/* Icon and Label */}
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <span className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase md:text-xs">
                   {stat.title}
                 </span>
                 <div className="flex size-6 items-center justify-center">

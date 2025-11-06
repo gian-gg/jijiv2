@@ -5,7 +5,7 @@ import { DollarSign } from 'lucide-react';
 
 export function RecentTransactions(props: { transactions: Transaction[] }) {
   return (
-    <div className="border-border flex h-full w-full flex-1 flex-col overflow-hidden border">
+    <div className="bg-background/40 border-border flex h-full w-full flex-1 flex-col overflow-hidden border">
       {/* Header */}
       <div className="border-border flex items-center justify-between border-b px-3 py-2">
         <h3 className="text-sm font-semibold">Recent Transactions</h3>
