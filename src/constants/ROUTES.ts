@@ -1,4 +1,4 @@
-export const ROUTES = {
+const ROUTES = {
   ROOT: '/',
   WALLET: {
     ROOT: '/wallet',
@@ -7,3 +7,5 @@ export const ROUTES = {
   },
   GITHUB: 'https://github.com/gian-gg',
 };
+
+export default ROUTES;

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ROUTES } from '@/constants/ROUTES';
+import ROUTES from '@/constants/ROUTES';
 
 const MadeWith = () => {
   return (

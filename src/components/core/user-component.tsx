@@ -19,7 +19,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { getInitials } from '@/lib/helpers/user';
-import { ROUTES } from '@/constants/ROUTES';
+import ROUTES from '@/constants/ROUTES';
 
 export default function UserComponent({ user }: { user: User }) {
   const router = useRouter();

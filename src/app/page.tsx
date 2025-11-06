@@ -2,11 +2,12 @@ import { LoginForm } from '@/components/auth/form';
 import { getSession } from '@/lib/auth/server';
 import { redirect } from 'next/navigation';
 import MadeWith from '@/components/core/made-with';
+import ROUTES from '@/constants/ROUTES';
 
 export default async function LoginPage() {
   const session = await getSession();
   if (session) {
-    redirect('/wallet');
+    redirect(ROUTES.WALLET.ROOT);
   }
 
   return (
