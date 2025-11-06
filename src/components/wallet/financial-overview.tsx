@@ -48,17 +48,21 @@ export function FinancialOverview({
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {stats.map((stat) => {
+      {stats.map((stat, index) => {
         const Icon = stat.icon;
+        const gradientClass = index === 0 ? 'relative overflow-hidden' : '';
         return (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <Card key={stat.title} className={gradientClass}>
+            {index === 0 && (
+              <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
+            )}
+            <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {stat.title}
               </CardTitle>
               <Icon className="text-muted-foreground h-4 w-4" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative">
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-muted-foreground mt-1 text-xs">
                 {stat.change ? `${stat.change} from last month` : ''}

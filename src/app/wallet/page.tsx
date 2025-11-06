@@ -9,9 +9,9 @@ export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   return (
     <>
-      <div className="space-y-1">
-        <h2 className="text-3xl font-semibold tracking-tight">Wallet</h2>
-        <p className="text-muted-foreground">
+      <div className="space-y-2">
+        <h2 className="text-4xl font-bold tracking-tight">Wallet</h2>
+        <p className="text-muted-foreground text-lg">
           Track and manage your financial transactions
         </p>
       </div>

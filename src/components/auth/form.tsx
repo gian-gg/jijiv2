@@ -56,8 +56,10 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Welcome back</CardTitle>
-        <CardDescription>Login with your Google account</CardDescription>
+        <CardTitle className="text-2xl">Welcome back</CardTitle>
+        <CardDescription className="text-base">
+          Login with your Google account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSignIn}>
@@ -66,7 +68,7 @@ export function LoginForm() {
               <GoogleButton />
             </div>
             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-              <span className="bg-card text-muted-foreground relative z-10 px-2">
+              <span className="bg-card text-muted-foreground relative z-10 px-3">
                 Or continue with
               </span>
             </div>
@@ -92,7 +94,7 @@ export function LoginForm() {
                 Login
               </Button>
             </div>
-            <div className="text-destructive bg-destructive/10 border-destructive rounded-md border-2 border-dashed p-4 text-center text-xs">
+            <div className="border-destructive bg-destructive/10 text-destructive rounded-sm border-2 border-dashed p-4 text-center text-xs">
               App still under development. Sign ups are disabled.
             </div>
           </div>

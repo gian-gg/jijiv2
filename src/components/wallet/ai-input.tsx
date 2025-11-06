@@ -38,22 +38,22 @@ export function AiInput(props: {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <form onSubmit={handleSubmit}>
-        <div className="bg-card flex items-center gap-3 rounded-lg border p-3">
-          <Sparkles className="text-muted-foreground h-5 w-5 flex-shrink-0" />
+        <div className="border-border bg-card hover:border-border/60 focus-within:glow-purple focus-within:border-primary/50 focus-within:ring-primary/20 flex items-center gap-3 border p-4 shadow-sm transition-all focus-within:ring-2">
+          <Sparkles className="text-primary h-5 w-5 flex-shrink-0" />
 
           <Input
             type="text"
             placeholder='Add transaction or ask a question... e.g. "coffee for $5"'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 border-0 bg-transparent px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
           />
 
           <Button type="submit" size="sm">
             Submit
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
       </form>
