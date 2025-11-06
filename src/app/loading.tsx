@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex h-full w-full flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-6">
         {/* Loading text */}
         <div className="flex flex-col items-center gap-2">

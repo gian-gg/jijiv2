@@ -101,7 +101,7 @@ export default function UserComponent({ user }: { user: User }) {
         <DropdownMenuItem
           onClick={handleSignOut}
           disabled={isPending}
-          className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+          variant="destructive"
         >
           <LogOut className="mr-2 size-4" />
           Sign Out

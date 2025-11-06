@@ -12,7 +12,7 @@ import {
 const ForgotPassword = () => {
   return (
     <Dialog>
-      <DialogTrigger className="ml-auto cursor-pointer text-sm underline-offset-4 hover:underline">
+      <DialogTrigger className="ml-auto cursor-pointer text-xs underline-offset-4 hover:underline">
         Forgot your password?
       </DialogTrigger>
       <DialogContent>

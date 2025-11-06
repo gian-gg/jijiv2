@@ -1,6 +1,6 @@
 import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
-import './globals.css';
+import '@/globals.css';
 
 export const metadata: Metadata = {
   title: 'jiji',
@@ -29,7 +29,22 @@ export default function RootLayout({
         <div className="relative z-10 flex min-h-screen min-w-screen flex-col items-center justify-center p-2 md:p-6">
           {children}
         </div>
-        <Toaster theme="dark" richColors />
+        <Toaster
+          theme="dark"
+          richColors
+          toastOptions={{
+            style: {
+              background: 'oklch(0.2 0 0)',
+              border: '1px solid oklch(0.3 0 0)',
+              borderRadius: '0',
+              color: 'oklch(0.98 0.01 270)',
+              fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+              fontSize: '0.875rem',
+            },
+            className: 'toast-brutalist',
+          }}
+          position="bottom-right"
+        />
       </body>
     </html>
   );

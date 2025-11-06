@@ -354,4 +354,87 @@
     scrollbar-width: thin;
     scrollbar-color: oklch(0.32 0 0) oklch(0.19 0 0);
   }
+
+  /* Toast (Sonner) customization for brutalist design */
+  [data-sonner-toast] {
+    border-radius: 0 !important;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  }
+
+  [data-sonner-toast][data-styled='true'] {
+    background-color: oklch(0.2 0 0) !important;
+    border: 1px solid oklch(0.3 0 0) !important;
+    color: oklch(0.98 0.01 270) !important;
+  }
+
+  /* Success toast */
+  [data-sonner-toast][data-type='success'] {
+    background-color: oklch(0.2 0 0) !important;
+    border: 1px solid oklch(0.68 0.14 160) !important;
+  }
+
+  [data-sonner-toast][data-type='success'] [data-icon] {
+    color: oklch(0.68 0.14 160) !important;
+  }
+
+  /* Error/Destructive toast */
+  [data-sonner-toast][data-type='error'] {
+    background-color: oklch(0.2 0 0) !important;
+    border: 1px solid oklch(0.62 0.22 27) !important;
+  }
+
+  [data-sonner-toast][data-type='error'] [data-icon] {
+    color: oklch(0.62 0.22 27) !important;
+  }
+
+  /* Warning toast */
+  [data-sonner-toast][data-type='warning'] {
+    background-color: oklch(0.2 0 0) !important;
+    border: 1px solid oklch(0.75 0.16 80) !important;
+  }
+
+  [data-sonner-toast][data-type='warning'] [data-icon] {
+    color: oklch(0.75 0.16 80) !important;
+  }
+
+  /* Info toast */
+  [data-sonner-toast][data-type='info'] {
+    background-color: oklch(0.2 0 0) !important;
+    border: 1px solid oklch(0.78 0.14 285) !important;
+  }
+
+  [data-sonner-toast][data-type='info'] [data-icon] {
+    color: oklch(0.78 0.14 285) !important;
+  }
+
+  /* Toast title and description */
+  [data-sonner-toast] [data-title] {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: oklch(0.98 0.01 270) !important;
+  }
+
+  [data-sonner-toast] [data-description] {
+    font-size: 0.75rem;
+    color: oklch(0.72 0.01 270) !important;
+  }
+
+  /* Close button */
+  [data-sonner-toast] [data-close-button] {
+    background-color: transparent !important;
+    border: 1px solid oklch(0.3 0 0) !important;
+    color: oklch(0.72 0.01 270) !important;
+    border-radius: 0 !important;
+  }
+
+  [data-sonner-toast] [data-close-button]:hover {
+    background-color: oklch(0.26 0 0) !important;
+    border-color: oklch(0.4 0 0) !important;
+    color: oklch(0.98 0.01 270) !important;
+  }
+
+  /* Loading bar */
+  [data-sonner-toast] [data-loading-icon] {
+    color: oklch(0.78 0.14 285) !important;
+  }
 }

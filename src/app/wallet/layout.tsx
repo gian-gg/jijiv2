@@ -21,7 +21,7 @@ export default async function DashboardLayout({
 
       <Header user={session.user} />
 
-      <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
+      <main className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">
         {children}
       </main>
     </div>
