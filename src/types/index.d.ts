@@ -9,6 +9,6 @@ declare global {
     email: string;
     emailVerified: boolean;
     name: string;
-    image?: string | null | undefined | undefined;
+    image?: string | null;
   }
 }

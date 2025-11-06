@@ -1,6 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 import type { Transaction } from '@/types/transactions';
+import { TrendingDown, TrendingUp, Wallet } from 'lucide-react';
 
 function getStats(transactions: Transaction[]) {
   const income = transactions
@@ -47,28 +46,38 @@ export function FinancialOverview({
   const stats = getStats(transactions);
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid grid-cols-3 gap-3">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
-        const gradientClass = index === 0 ? 'relative overflow-hidden' : '';
         return (
-          <Card key={stat.title} className={gradientClass}>
-            {index === 0 && (
-              <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
-            )}
-            <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <Icon className="text-muted-foreground h-4 w-4" />
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-muted-foreground mt-1 text-xs">
-                {stat.change ? `${stat.change} from last month` : ''}
-              </p>
-            </CardContent>
-          </Card>
+          <div
+            key={stat.title}
+            className="border-border relative overflow-hidden border p-3"
+          >
+            <div className="relative flex flex-col gap-2">
+              {/* Icon and Label */}
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                  {stat.title}
+                </span>
+                <div className="flex size-6 items-center justify-center">
+                  <Icon className="text-muted-foreground size-3" />
+                </div>
+              </div>
+
+              {/* Value */}
+              <div className="text-lg leading-none font-bold tabular-nums">
+                {stat.value}
+              </div>
+
+              {/* Optional Change Indicator */}
+              {stat.change && (
+                <div className="text-muted-foreground text-xs">
+                  {stat.change}
+                </div>
+              )}
+            </div>
+          </div>
         );
       })}
     </div>

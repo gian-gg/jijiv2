@@ -1,8 +1,8 @@
-import { getSession } from '@/lib/auth/server';
-import React from 'react';
-import { redirect } from 'next/navigation';
-import { Footer, Header } from '@/components/core';
+import { Header } from '@/components/core';
 import ROUTES from '@/constants/ROUTES';
+import { getSession } from '@/lib/auth/server';
+import { redirect } from 'next/navigation';
+import React from 'react';
 
 export default async function DashboardLayout({
   children,
@@ -15,19 +15,21 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="bg-background relative flex min-h-screen w-full flex-col items-center justify-between">
-      {/* Subtle background gradient */}
-      <div className="gradient-purple-mesh pointer-events-none absolute inset-0 opacity-30" />
-      <div className="bg-dot-pattern-sm pointer-events-none absolute inset-0 opacity-20" />
+    <div className="border-border bg-card flex h-full w-full flex-1 flex-col overflow-hidden border md:h-[90vh] md:max-w-2xl">
+      <div className="border-border flex items-center justify-between border-b px-6 py-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-primary/10 border-primary/20 flex h-10 w-10 items-center justify-center border">
+            <span className="text-primary text-lg font-bold">j</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight">jiji</h1>
+        </div>
 
-      <Header user={session.user} />
+        <Header user={session.user} />
+      </div>
 
-      {/* Main Content */}
-      <main className="relative z-10 mt-6 mb-20 flex h-full w-full max-w-7xl flex-1 flex-col gap-8 px-6 md:px-8">
+      <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
         {children}
       </main>
-
-      <Footer />
     </div>
   );
 }

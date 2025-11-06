@@ -54,24 +54,25 @@ export function LoginForm() {
   };
 
   return (
-    <Card>
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
-        <CardDescription className="text-base">
+    <Card className="border-primary/20 overflow-hidden">
+      {/* Subtle gradient background */}
+      <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
+
+      <CardHeader className="relative text-center">
+        <CardTitle className="text-xl font-bold">Welcome back</CardTitle>
+        <CardDescription className="text-sm">
           Login with your Google account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="relative">
         <form onSubmit={handleSignIn}>
           <div className="grid gap-6">
             <div className="flex flex-col gap-4">
               <GoogleButton />
             </div>
-            <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-              <span className="bg-card text-muted-foreground relative z-10 px-3">
-                Or continue with
-              </span>
-            </div>
+            <span className="text-muted-foreground relative z-10 px-3 text-center text-xs">
+              Or continue with
+            </span>
             <div className="grid gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -94,7 +95,7 @@ export function LoginForm() {
                 Login
               </Button>
             </div>
-            <div className="border-destructive bg-destructive/10 text-destructive rounded-sm border-2 border-dashed p-4 text-center text-xs">
+            <div className="border-destructive bg-destructive/10 text-destructive border-2 border-dashed p-4 text-center text-xs">
               App still under development. Sign ups are disabled.
             </div>
           </div>

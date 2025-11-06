@@ -38,43 +38,40 @@ export function AiInput(props: {
   };
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={handleSubmit}>
-        <div className="border-border bg-card hover:border-border/60 focus-within:glow-purple focus-within:border-primary/50 focus-within:ring-primary/20 flex items-center gap-3 border p-4 shadow-sm transition-all focus-within:ring-2">
-          <Sparkles className="text-primary h-5 w-5 flex-shrink-0" />
-
-          <Input
-            type="text"
-            placeholder='Add transaction or ask a question... e.g. "coffee for $5"'
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-          />
-
-          <Button type="submit" size="sm">
-            Submit
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-      </form>
-
+    <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        {[
-          'coffee for $5',
-          'uber ride for $15',
-          'Show spending trends',
-          'Monthly budget analysis',
-        ].map((suggestion) => (
+        {['coffee $5', 'uber $15'].map((suggestion) => (
           <Button
             key={suggestion}
             variant="outline"
             size="sm"
             onClick={() => setQuery(suggestion)}
+            className="text-muted-foreground hover:text-foreground hover:border-primary/30 h-7 text-xs transition-all"
           >
             {suggestion}
           </Button>
         ))}
       </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="border-border bg-card hover:border-primary/30 focus-within:glow-purple focus-within:border-primary/50 group flex items-center gap-2 border p-3 shadow-sm transition-all duration-300">
+          <div className="bg-primary/10 border-primary/20 group-focus-within:border-primary/40 flex h-8 w-8 flex-shrink-0 items-center justify-center border transition-colors">
+            <Sparkles className="text-primary h-4 w-4" />
+          </div>
+
+          <Input
+            type="text"
+            placeholder='e.g. "coffee for $5"'
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 border-0 bg-transparent px-0 text-sm shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+
+          <Button type="submit" size="sm" className="flex-shrink-0">
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

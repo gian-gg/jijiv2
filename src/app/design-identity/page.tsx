@@ -21,20 +21,31 @@ import { useState } from 'react';
 
 export default function DesignIdentityPage() {
   return (
-    <div className="bg-background min-h-screen py-12">
-      <div className="container mx-auto max-w-6xl space-y-16 px-6">
+    <div className="bg-background relative min-h-screen py-12">
+      {/* Background effects */}
+      <div className="gradient-purple-mesh pointer-events-none absolute inset-0 opacity-30" />
+      <div className="bg-dot-pattern-sm pointer-events-none absolute inset-0 opacity-20" />
+
+      <div className="relative z-10 container mx-auto max-w-6xl space-y-16 px-6">
         {/* Header */}
-        <header className="border-border space-y-4 border-b pb-8">
-          <div className="flex items-center gap-3">
-            <Sparkles className="text-primary h-8 w-8" />
-            <h1 className="text-4xl font-bold tracking-tight">
-              jiji Design System
-            </h1>
+        <header className="border-border space-y-6 border-b pb-8">
+          <div className="flex items-center gap-4">
+            <div className="bg-primary/10 border-primary/20 flex h-16 w-16 items-center justify-center border">
+              <Sparkles className="text-primary h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight">
+                jiji Design System
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg">
+                A brutalist, accessible design language
+              </p>
+            </div>
           </div>
-          <p className="text-muted-foreground max-w-3xl text-lg">
-            A brutalist, accessible design language built on matte black
-            foundations and pastel purple accents. Sharp edges, high contrast,
-            and purposeful minimalism.
+          <p className="text-muted-foreground max-w-3xl">
+            Built on matte black foundations and pastel purple accents. Sharp
+            edges, high contrast, and purposeful minimalism define every
+            interaction.
           </p>
         </header>
 

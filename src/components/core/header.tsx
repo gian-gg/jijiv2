@@ -4,14 +4,10 @@ import UserComponent from '@/components/core/user-component';
 
 const Header = ({ user }: { user: User }) => {
   return (
-    <header className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex w-full items-center justify-between border-b px-6 py-3 backdrop-blur md:px-8">
-      <h1 className="text-xl font-bold">jiji</h1>
-
-      <div className="flex items-center gap-2">
-        <NotificationsPopover />
-        <UserComponent user={user} />
-      </div>
-    </header>
+    <div className="z-10 flex items-center gap-2">
+      <NotificationsPopover />
+      <UserComponent user={user} />
+    </div>
   );
 };
 
