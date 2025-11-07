@@ -1,19 +1,16 @@
-name: CI/CD
+name: code quality pipleline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - '**'
+
   pull_request:
-    branches: [main, develop]
+    types: [opened, synchronize, reopened]
 
 jobs:
-  build-and-deploy:
+  code-quality:
     runs-on: ubuntu-latest
-    env:
-      # Required for auth and database
-      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       # Checkout repo
@@ -37,7 +34,3 @@ jobs:
       # ESLint check
       - name: Run ESLint
         run: bun run lint
-
-      # Build Next.js project
-      - name: Build Next.js project
-        run: bun run build
