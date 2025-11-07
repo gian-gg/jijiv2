@@ -64,7 +64,10 @@ export default function Budget() {
 
   return (
     <>
-      <PageHeader title="Budget" description="View and manage your budget" />
+      <PageHeader
+        title="Categories"
+        description="View and manage your categories"
+      />
 
       <ScrollableContent className="overflow-y-auto">
         {/* Overview Cards */}
