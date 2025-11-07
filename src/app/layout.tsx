@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-background flex min-h-screen min-w-screen flex-col items-center justify-center antialiased">
+      <body className="bg-background flex min-h-screen min-w-screen flex-col items-center justify-center overflow-hidden antialiased">
         <>
           {/* Background effects */}
           <div className="gradient-purple-mesh pointer-events-none absolute inset-0 opacity-50" />
@@ -26,7 +26,7 @@ export default function RootLayout({
           <div className="border-primary/10 pointer-events-none absolute right-10 bottom-20 h-24 w-24 border" />
         </>
 
-        <div className="relative z-10 flex min-h-screen min-w-screen flex-col items-center justify-center p-2 md:p-6">
+        <div className="relative z-10 flex min-h-screen min-w-screen flex-col items-center justify-center overflow-hidden p-2 md:p-6">
           {children}
         </div>
         <Toaster

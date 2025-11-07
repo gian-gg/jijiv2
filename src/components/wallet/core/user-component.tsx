@@ -14,12 +14,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { signOut } from '@/lib/auth/client';
-import { toast } from 'sonner';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
-import { getInitials } from '@/lib/helpers/user';
 import ROUTES from '@/constants/ROUTES';
+import { getInitials } from '@/lib/helpers/user';
 
 export default function UserComponent({ user }: { user: User }) {
   const router = useRouter();

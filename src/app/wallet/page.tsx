@@ -1,9 +1,10 @@
 'use client';
-import { AiInput } from '@/components/wallet/ai-input';
-import { FinancialOverview } from '@/components/wallet/financial-overview';
-import { RecentTransactions } from '@/components/wallet/recent-transactions';
+import {
+  AiInput,
+  FinancialOverview,
+  RecentTransactions,
+} from '@/components/wallet/transactions';
 import type { Transaction } from '@/types/transactions';
-import Navigation from '@/components/wallet/navigation';
 import { useState } from 'react';
 
 export default function Home() {
@@ -25,9 +26,6 @@ export default function Home() {
 
       {/* AI Input */}
       <AiInput transactions={transactions} setTransactions={setTransactions} />
-
-      {/* Navigation */}
-      <Navigation />
     </>
   );
 }

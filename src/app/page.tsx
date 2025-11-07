@@ -1,5 +1,5 @@
-import { LoginForm } from '@/components/auth/form';
-import MadeWith from '@/components/core/watermark';
+import { LoginForm } from '@/components/auth';
+import { Watermark } from '@/components/core';
 import ROUTES from '@/constants/ROUTES';
 import { getSession } from '@/lib/auth/server';
 import { redirect } from 'next/navigation';
@@ -13,7 +13,7 @@ export default async function LoginPage() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
       <LoginForm />
-      <MadeWith />
+      <Watermark />
     </div>
   );
 }

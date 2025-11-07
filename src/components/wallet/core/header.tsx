@@ -1,6 +1,4 @@
-import React from 'react';
-import { NotificationsPopover } from '@/components/wallet/notifications-popover';
-import UserComponent from '@/components/core/user-component';
+import { NotificationsPopover, UserComponent } from '@/components/wallet/core';
 
 const Header = ({ user }: { user: User }) => {
   return (

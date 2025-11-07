@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { usePathname } from 'next/navigation';
 
 import { Bell, Home, List, PiggyBank, PieChart } from 'lucide-react';
@@ -24,7 +24,7 @@ const NAV = [
 const Navigation = () => {
   const pathname = usePathname();
   return (
-    <div className="bg-background/40 border-border flex h-full w-full items-center gap-1 border p-1">
+    <div className="bg-background/40 border-border flex w-full items-center gap-1 border-t p-1">
       {NAV.map((item) => {
         const Icon = item.icon;
 
