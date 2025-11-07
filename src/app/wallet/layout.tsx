@@ -15,7 +15,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="border-primary/20 bg-card flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden border">
+    <div className="border-primary/20 bg-card flex h-[98vh] w-full max-w-2xl flex-col overflow-hidden border md:h-[90vh]">
       {/* Subtle gradient background */}
       <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
 
