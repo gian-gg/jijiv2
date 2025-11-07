@@ -53,11 +53,11 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="border-primary/20 overflow-hidden">
+    <Card className="overflow-hidden p-8 py-12">
       {/* Subtle gradient background */}
       <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
 
-      <CardHeader className="relative text-center">
+      <CardHeader className="relative border-0 text-center">
         <CardTitle className="text-xl font-bold">Welcome back</CardTitle>
         <CardDescription className="text-sm">
           Login with your Google account
