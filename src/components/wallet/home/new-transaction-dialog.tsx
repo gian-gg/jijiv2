@@ -78,7 +78,7 @@ const NewTransactionDialog = ({
 
   const handleCancel = () => {
     // UI feedback message
-    setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES['CANCELLED_MESSAGE']]);
+    setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES.CANCELLED_MESSAGE()]);
 
     // close dialog
     onOpenChange(false);

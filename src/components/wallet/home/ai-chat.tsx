@@ -16,7 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export function AiChat() {
   const [messages, setMessages] = useState<Message[]>([
-    AI_CONSTANT_MESSAGES['FIRST_MESSAGE'],
+    AI_CONSTANT_MESSAGES.FIRST_MESSAGE(),
   ]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentTransaction, setCurrentTransaction] =
@@ -38,7 +38,7 @@ export function AiChat() {
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
-      id: messages.length + 1,
+      id: Date.now(),
       role: 'user',
       content: input,
       timestamp: new Date(),
@@ -53,7 +53,7 @@ export function AiChat() {
 
       if (res && res.description && res.amount) {
         setCurrentTransaction({
-          id: new Date().getTime(),
+          id: Date.now(),
           description: res.description,
           amount: res.amount,
           date: new Date().toISOString().split('T')[0],
@@ -62,16 +62,16 @@ export function AiChat() {
           payment_method:
             res.payment_method ?? DEFAULT_TRANSACTION.payment_method,
         });
+        setDialogOpen(true);
       } else {
         // Generic response if can't parse
-        setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES['CANNOT_PARSE']]);
+        setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES.CANT_PARSE()]);
       }
     } catch (error) {
       // Generic error message
-      setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES['ERROR_MESSAGE']]);
+      setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES.ERROR_MESSAGE()]);
     } finally {
       setIsLoading(false);
-      setDialogOpen(true);
     }
   };
 

@@ -1,6 +1,6 @@
-import type { Transaction } from '@/types/transactions';
 import type { Message } from '@/types/home';
-import { TrendingUp, TrendingDown, AlertCircle, Clock } from 'lucide-react';
+import type { Transaction } from '@/types/transactions';
+import { AlertCircle, Clock, TrendingDown, TrendingUp } from 'lucide-react';
 
 /**
  * Transaction categories for expense and income classification
@@ -82,32 +82,35 @@ export const DEFAULT_TRANSACTION = {
   payment_method: 'Unknown',
 };
 
-export const AI_CONSTANT_MESSAGES: Record<string, Message> = {
-  FIRST_MESSAGE: {
-    id: 1,
+/**
+ * AI constant messages - functions that return new messages with unique IDs
+ */
+export const AI_CONSTANT_MESSAGES = {
+  FIRST_MESSAGE: (): Message => ({
+    id: Date.now(),
     role: 'assistant',
     content:
       'Hello! I\'m your financial assistant. You can tell me about your transactions like "coffee $5" or ask me questions about your finances.',
     timestamp: new Date(),
-  },
-  CANT_PARSE: {
-    id: 2,
+  }),
+  CANT_PARSE: (): Message => ({
+    id: Date.now(),
     role: 'assistant',
     content:
       'I understood your message, but I couldn\'t extract transaction details. Try something like "lunch $25" or "salary $3000".',
     timestamp: new Date(),
-  },
-  ERROR_MESSAGE: {
-    id: 3,
+  }),
+  ERROR_MESSAGE: (): Message => ({
+    id: Date.now(),
     role: 'assistant',
     content:
       'Oops! Something went wrong while processing your request. Please try again later.',
     timestamp: new Date(),
-  },
-  CANCELLED_MESSAGE: {
-    id: 4,
+  }),
+  CANCELLED_MESSAGE: (): Message => ({
+    id: Date.now(),
     role: 'assistant',
     content: 'No worries! Transaction cancelled.',
     timestamp: new Date(),
-  },
+  }),
 };
