@@ -9,10 +9,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Plus, Check } from 'lucide-react';
-import { useWallet } from '@/components/wallet/core/wallet-context';
+import useWalletStore from '@/stores/useWalletStore';
 
 export function WalletSwitcher() {
-  const { wallets, activeWallet, setActiveWallet } = useWallet();
+  const { wallets, activeWallet, setActiveWallet } = useWalletStore();
 
   const handleAddWallet = () => {
     // TODO: Implement add wallet dialog

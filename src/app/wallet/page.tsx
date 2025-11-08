@@ -1,6 +1,5 @@
 'use client';
 import { AiChat, QuickInfo } from '@/components/wallet/home';
-import { useState } from 'react';
 
 export default function Home() {
   return (

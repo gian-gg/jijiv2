@@ -1,8 +1,7 @@
 'use client';
 
-import type { Transaction } from '@/types/transactions';
-import { Calendar, TrendingDown, TrendingUp } from 'lucide-react';
 import useTransactionStore from '@/stores/useTransactionsStore';
+import { Calendar, TrendingDown, TrendingUp } from 'lucide-react';
 
 export function QuickInfo() {
   const { transactions } = useTransactionStore();

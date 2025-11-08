@@ -4,6 +4,3 @@ export { NotificationsPopover } from './notifications-popover';
 export { default as Header } from './header';
 export { default as UserComponent } from './user-component';
 export { WalletSwitcher } from './wallet-switcher';
-
-export { WalletProvider, useWallet } from './wallet-context';
-export type { Wallet } from './wallet-context';
