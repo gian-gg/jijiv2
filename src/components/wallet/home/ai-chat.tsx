@@ -14,12 +14,7 @@ import type { Transaction } from '@/types/transactions';
 import { Send, Sparkles, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-interface AiChatProps {
-  transactions: Transaction[];
-  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
-}
-
-export function AiChat({ transactions, setTransactions }: AiChatProps) {
+export function AiChat() {
   const [messages, setMessages] = useState<Message[]>([
     AI_CONSTANT_MESSAGES['FIRST_MESSAGE'],
   ]);
@@ -58,7 +53,7 @@ export function AiChat({ transactions, setTransactions }: AiChatProps) {
 
       if (res && res.description && res.amount) {
         setCurrentTransaction({
-          id: transactions.length + 1,
+          id: new Date().getTime(),
           description: res.description,
           amount: res.amount,
           date: new Date().toISOString().split('T')[0],
@@ -83,8 +78,7 @@ export function AiChat({ transactions, setTransactions }: AiChatProps) {
   return (
     <>
       <NewTransactionDialog
-        transaction={currentTransaction}
-        setTransactions={setTransactions}
+        currentTransaction={currentTransaction}
         setMessages={setMessages}
         open={dialogOpen}
         onOpenChange={setDialogOpen}

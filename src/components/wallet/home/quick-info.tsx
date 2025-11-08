@@ -2,12 +2,10 @@
 
 import type { Transaction } from '@/types/transactions';
 import { Calendar, TrendingDown, TrendingUp } from 'lucide-react';
+import useTransactionStore from '@/stores/useTransactionsStore';
 
-interface QuickInfoProps {
-  transactions: Transaction[];
-}
-
-export function QuickInfo({ transactions }: QuickInfoProps) {
+export function QuickInfo() {
+  const { transactions } = useTransactionStore();
   // Calculate stats
   const income = transactions
     .filter((t) => t.type === 'income')

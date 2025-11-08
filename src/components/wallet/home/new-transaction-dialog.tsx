@@ -19,6 +19,7 @@ import {
   PAYMENT_METHODS,
   TRANSACTION_TYPES,
 } from '@/constants/TRANSACTIONS';
+import useTransactionStore from '@/stores/useTransactionsStore';
 import type { Message } from '@/types/home';
 import type { Transaction } from '@/types/transactions';
 import { Calendar, CreditCard, DollarSign, FileText, Tag } from 'lucide-react';
@@ -26,43 +27,39 @@ import { Calendar, CreditCard, DollarSign, FileText, Tag } from 'lucide-react';
 const NewTransactionDialog = ({
   open,
   onOpenChange,
-  transaction,
-  setTransactions,
+  currentTransaction,
   setMessages,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  transaction: Transaction | null;
-  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  currentTransaction: Transaction | null;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }) => {
+  const { addTransaction } = useTransactionStore();
+
   const [editedTransaction, setEditedTransaction] =
     useState<Transaction | null>(null);
 
   // Initialize edited transaction when dialog opens
   useEffect(() => {
-    if (transaction) {
-      setEditedTransaction({ ...transaction });
+    if (currentTransaction) {
+      setEditedTransaction({ ...currentTransaction });
     }
-  }, [transaction]);
+  }, [currentTransaction]);
 
-  if (!transaction || !editedTransaction) return null;
+  if (!currentTransaction || !editedTransaction) return null;
 
   const handleAddTransaction = async (res: Transaction) => {
     // Add transaction locally
-    setTransactions((prev) => [
-      ...prev,
-      {
-        id: prev.length + 1,
-        description: res.description,
-        amount: res.amount,
-        date: res.date,
-        type: res.type ?? DEFAULT_TRANSACTION.type,
-        category: res.category ?? DEFAULT_TRANSACTION.category,
-        payment_method:
-          res.payment_method ?? DEFAULT_TRANSACTION.payment_method,
-      },
-    ]);
+    addTransaction({
+      id: Date.now(),
+      description: res.description,
+      amount: res.amount,
+      date: res.date,
+      type: res.type ?? DEFAULT_TRANSACTION.type,
+      category: res.category ?? DEFAULT_TRANSACTION.category,
+      payment_method: res.payment_method ?? DEFAULT_TRANSACTION.payment_method,
+    });
 
     // UI feedback message
     const assistantMessage: Message = {

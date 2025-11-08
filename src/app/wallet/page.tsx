@@ -1,11 +1,8 @@
 'use client';
 import { AiChat, QuickInfo } from '@/components/wallet/home';
-import type { Transaction } from '@/types/transactions';
 import { useState } from 'react';
 
 export default function Home() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
   return (
     <>
       <div>
@@ -16,10 +13,10 @@ export default function Home() {
       </div>
 
       {/* Quick Info Stats */}
-      <QuickInfo transactions={transactions} />
+      <QuickInfo />
 
       {/* AI Chat */}
-      <AiChat transactions={transactions} setTransactions={setTransactions} />
+      <AiChat />
     </>
   );
 }

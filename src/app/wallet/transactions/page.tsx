@@ -11,103 +11,22 @@ import {
 import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/wallet/core';
 import { EmptyState, FilterButtons } from '@/components/wallet/ui';
+import useTransactionStore from '@/stores/useTransactionsStore';
 import { useState } from 'react';
 
-// Mock data for demonstration
-const mockTransactions = [
-  {
-    id: '1',
-    description: 'Starbucks Coffee',
-    amount: -5.99,
-    category: 'Food & Drink',
-    date: '2025-11-08',
-    time: '09:30 AM',
-    status: 'completed',
-  },
-  {
-    id: '2',
-    description: 'Salary Deposit',
-    amount: 3500.0,
-    category: 'Income',
-    date: '2025-11-07',
-    time: '12:00 PM',
-    status: 'completed',
-  },
-  {
-    id: '3',
-    description: 'Amazon Purchase',
-    amount: -89.99,
-    category: 'Shopping',
-    date: '2025-11-06',
-    time: '03:45 PM',
-    status: 'completed',
-  },
-  {
-    id: '4',
-    description: 'Netflix Subscription',
-    amount: -15.99,
-    category: 'Entertainment',
-    date: '2025-11-05',
-    time: '08:00 AM',
-    status: 'completed',
-  },
-  {
-    id: '5',
-    description: 'Uber Ride',
-    amount: -24.5,
-    category: 'Transportation',
-    date: '2025-11-04',
-    time: '06:15 PM',
-    status: 'completed',
-  },
-  {
-    id: '6',
-    description: 'Freelance Payment',
-    amount: 850.0,
-    category: 'Income',
-    date: '2025-11-03',
-    time: '10:30 AM',
-    status: 'pending',
-  },
-  {
-    id: '7',
-    description: 'Grocery Store',
-    amount: -127.43,
-    category: 'Food & Drink',
-    date: '2025-11-02',
-    time: '05:20 PM',
-    status: 'completed',
-  },
-  {
-    id: '8',
-    description: 'Gym Membership',
-    amount: -49.99,
-    category: 'Health & Fitness',
-    date: '2025-11-01',
-    time: '07:00 AM',
-    status: 'completed',
-  },
-  {
-    id: '9',
-    description: 'Spotify Subscription',
-    amount: -9.99,
-    category: 'Entertainment',
-    date: '2025-10-31',
-    time: '06:00 PM',
-    status: 'completed',
-  },
-];
-
 export default function Transactions() {
+  const { transactions } = useTransactionStore();
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredTransactions = mockTransactions.filter((transaction) => {
+  const filteredTransactions = transactions.filter((transaction) => {
+    // Filter by transaction type
     const matchesFilter =
       filter === 'all' ||
-      (filter === 'income' && transaction.amount > 0) ||
-      (filter === 'expense' && transaction.amount < 0);
+      (filter === 'income' && transaction.type === 'income') ||
+      (filter === 'expense' && transaction.type === 'expense');
 
+    // Filter by search query
     const matchesSearch = transaction.description
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -185,7 +104,7 @@ export default function Transactions() {
             Transactions{' '}
             {filteredTransactions.length > 0 && (
               <span className="text-accent text-xs">
-                ({filteredTransactions.length} / {mockTransactions.length})
+                ({filteredTransactions.length} / {transactions.length})
               </span>
             )}
           </CardTitle>
@@ -203,12 +122,12 @@ export default function Transactions() {
                   <div className="flex items-center gap-4">
                     <div
                       className={`flex size-10 items-center justify-center border ${
-                        transaction.amount > 0
+                        transaction.type === 'income'
                           ? 'border-success/20 bg-success/10'
                           : 'border-destructive/20 bg-destructive/10'
                       }`}
                     >
-                      {transaction.amount > 0 ? (
+                      {transaction.type === 'income' ? (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="20"
@@ -250,11 +169,15 @@ export default function Transactions() {
                       <div className="text-muted-foreground flex items-center gap-2 text-xs">
                         <span>{transaction.date}</span>
                         <span>•</span>
-                        <span>{transaction.time}</span>
-                        <span>•</span>
                         <Badge variant="outline" className="text-xs">
                           {transaction.category}
                         </Badge>
+                        {transaction.payment_method && (
+                          <>
+                            <span>•</span>
+                            <span>{transaction.payment_method}</span>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -262,19 +185,17 @@ export default function Transactions() {
                   <div className="flex flex-col items-end gap-1">
                     <p
                       className={`text-sm font-bold ${
-                        transaction.amount > 0
+                        transaction.type === 'income'
                           ? 'text-success'
                           : 'text-foreground'
                       }`}
                     >
-                      {transaction.amount > 0 ? '+' : ''}$
+                      {transaction.type === 'income' ? '+' : '-'}$
                       {Math.abs(transaction.amount).toFixed(2)}
                     </p>
-                    {transaction.status === 'pending' && (
-                      <Badge variant="secondary" className="text-xs">
-                        Pending
-                      </Badge>
-                    )}
+                    <Badge variant="outline" className="text-xs capitalize">
+                      {transaction.type}
+                    </Badge>
                   </div>
                 </div>
               ))
