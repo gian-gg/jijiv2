@@ -10,7 +10,7 @@ Your task is to extract key financial details and respond ONLY with a valid JSON
 
 The JSON format must strictly follow this structure:
 {
-  "type": "income" | "expense" | "debt" | "reminder",
+  "type": "income" | "expense",
   "category": string,            // e.g. "Food", "Transportation", "Bills", etc.
   "amount": number,              // numeric only, no currency symbols
   "description": string,         // brief summary of the transaction
@@ -19,10 +19,8 @@ The JSON format must strictly follow this structure:
 
 If information is missing, infer from context or leave null.
 Make reasonable assumptions — for example:
-- “paid”, “bought”, “spent” → expense
-- “earned”, “received” → income
-- “owe”, “borrowed”, “lent” → debt
-- “remind” or future date → reminder
+- "paid", "bought", "spent" → expense
+- "earned", "received" → income
 
 Respond with valid JSON only, no markdown or code fences.
 `;

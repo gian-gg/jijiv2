@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { usePathname } from 'next/navigation';
 
-import { Bell, Home, List, ListCollapse, PieChart } from 'lucide-react';
+import { Home, List, ListCollapse, PieChart } from 'lucide-react';
 
 const NAV = [
   { name: 'Home', href: '/wallet', icon: Home },
@@ -13,7 +13,6 @@ const NAV = [
     icon: List,
   },
   { name: 'Categories', href: '/wallet/categories', icon: ListCollapse },
-  { name: 'Reminders', href: '/wallet/reminders', icon: Bell },
   {
     name: 'Analytics',
     href: '/wallet/analytics',

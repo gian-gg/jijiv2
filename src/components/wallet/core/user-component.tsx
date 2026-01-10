@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, Bell, CreditCard, LogOut, Settings2 } from 'lucide-react';
+import { BadgeCheck, CreditCard, LogOut, Settings2 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -91,10 +91,6 @@ export default function UserComponent({ user }: { user: User }) {
           <DropdownMenuItem>
             <CreditCard className="mr-2 size-4" />
             Wallet
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell className="mr-2 size-4" />
-            Notifications
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

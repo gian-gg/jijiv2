@@ -1,6 +1,6 @@
 import type { Message } from '@/types/home';
 import type { Transaction } from '@/types/transactions';
-import { AlertCircle, Clock, TrendingDown, TrendingUp } from 'lucide-react';
+import { TrendingDown, TrendingUp } from 'lucide-react';
 
 /**
  * Transaction categories for expense and income classification
@@ -50,16 +50,6 @@ export const TRANSACTION_TYPES: Array<{
     value: 'expense',
     label: 'Expense',
     icon: <TrendingDown className="h-4 w-4" />,
-  },
-  {
-    value: 'debt',
-    label: 'Debt',
-    icon: <AlertCircle className="h-4 w-4" />,
-  },
-  {
-    value: 'reminder',
-    label: 'Reminder',
-    icon: <Clock className="h-4 w-4" />,
   },
 ];
 
