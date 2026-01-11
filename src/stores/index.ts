@@ -4,5 +4,5 @@ export { default as useSettingsStore } from './useSettingsStore';
 
 // Export types
 export type { Transaction } from '@/types/transactions';
-export type { ModelId } from './useSettingsStore';
-export { AVAILABLE_MODELS } from './useSettingsStore';
+export type { ModelId } from '@/constants/AI';
+export { AVAILABLE_MODELS } from '@/constants/AI';

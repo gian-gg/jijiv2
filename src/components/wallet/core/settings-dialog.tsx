@@ -18,12 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import useSettingsStore, {
-  AVAILABLE_MODELS,
-  type ModelId,
-} from '@/stores/useSettingsStore';
-import { Eye, EyeOff, Key } from 'lucide-react';
-import { useState } from 'react';
+import useSettingsStore from '@/stores/useSettingsStore';
+import { AVAILABLE_MODELS, type ModelId } from '@/constants/AI';
+import { Eye, EyeOff, Key, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface SettingsDialogProps {
@@ -32,17 +30,46 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const { selectedModel, apiKey, setSelectedModel, setApiKey } =
-    useSettingsStore();
-  const [localModel, setLocalModel] = useState<ModelId>(selectedModel);
+  const selectedModel = useSettingsStore((state) => state.selectedModel);
+  const apiKey = useSettingsStore((state) => state.apiKey);
+  const setSelectedModel = useSettingsStore((state) => state.setSelectedModel);
+  const setApiKey = useSettingsStore((state) => state.setApiKey);
+  const reset = useSettingsStore((state) => state.reset);
+
+  const [localModel, setLocalModel] = useState<ModelId | null>(selectedModel);
   const [localApiKey, setLocalApiKey] = useState(apiKey);
   const [showApiKey, setShowApiKey] = useState(false);
 
+  // Sync local state with store when dialog opens or store changes
+  useEffect(() => {
+    if (open) {
+      setLocalModel(selectedModel);
+      setLocalApiKey(apiKey);
+    }
+  }, [open, selectedModel, apiKey]);
+
+  const canSave = localApiKey.trim().length > 0 && localModel !== null;
+
   const handleSave = () => {
+    if (!localApiKey.trim()) {
+      toast.error('Please enter an API key');
+      return;
+    }
+    if (!localModel) {
+      toast.error('Please select a model');
+      return;
+    }
     setSelectedModel(localModel);
-    setApiKey(localApiKey);
+    setApiKey(localApiKey.trim());
     toast.success('Settings saved');
     onOpenChange(false);
+  };
+
+  const handleReset = () => {
+    reset();
+    setLocalModel(null);
+    setLocalApiKey('');
+    toast.success('Settings reset');
   };
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -67,9 +94,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <div className="space-y-4 py-4">
           {/* Model Selection */}
           <div className="space-y-2">
-            <Label htmlFor="model">AI Model</Label>
+            <Label htmlFor="model">
+              AI Model <span className="text-destructive">*</span>
+            </Label>
             <Select
-              value={localModel}
+              value={localModel ?? ''}
               onValueChange={(value) => setLocalModel(value as ModelId)}
             >
               <SelectTrigger id="model" className="w-full">
@@ -92,30 +121,46 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           {/* API Key Input */}
           <div className="space-y-2">
-            <Label htmlFor="apiKey">OpenRouter API Key</Label>
-            <div className="relative">
-              <Key className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-              <Input
-                id="apiKey"
-                type={showApiKey ? 'text' : 'password'}
-                placeholder="sk-or-..."
-                value={localApiKey}
-                onChange={(e) => setLocalApiKey(e.target.value)}
-                className="pr-10 pl-9"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute top-1/2 right-1 size-7 -translate-y-1/2"
-                onClick={() => setShowApiKey(!showApiKey)}
-              >
-                {showApiKey ? (
-                  <EyeOff className="size-4" />
-                ) : (
-                  <Eye className="size-4" />
-                )}
-              </Button>
+            <Label htmlFor="apiKey">
+              OpenRouter API Key <span className="text-destructive">*</span>
+            </Label>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Key className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+                <Input
+                  id="apiKey"
+                  type={showApiKey ? 'text' : 'password'}
+                  placeholder="sk-or-..."
+                  value={localApiKey}
+                  onChange={(e) => setLocalApiKey(e.target.value)}
+                  className="pr-10 pl-9"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-1/2 right-1 size-7 -translate-y-1/2"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                >
+                  {showApiKey ? (
+                    <EyeOff className="size-4" />
+                  ) : (
+                    <Eye className="size-4" />
+                  )}
+                </Button>
+              </div>
+              {(localApiKey || apiKey) && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={handleReset}
+                  className="text-destructive hover:text-destructive"
+                  title="Reset all settings"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
             </div>
             <p className="text-muted-foreground text-xs">
               Get your API key from{' '}
@@ -135,7 +180,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleSave} disabled={!canSave}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

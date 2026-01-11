@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AI_CONSTANT_MESSAGES, QUICK_ACTIONS } from '@/constants/TRANSACTIONS';
+import { QUICK_ACTIONS } from '@/constants/TRANSACTIONS';
+import { AI_ERROR_TYPES, AI_MESSAGES, type AIErrorType } from '@/constants/AI';
 import type { Message } from '@/types/home';
 import { Send, Sparkles, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -14,11 +15,13 @@ export function AiChat() {
   const apiKey = useSettingsStore((state) => state.apiKey);
   const selectedModel = useSettingsStore((state) => state.selectedModel);
   const [messages, setMessages] = useState<Message[]>([
-    AI_CONSTANT_MESSAGES.FIRST_MESSAGE(),
+    AI_MESSAGES.FIRST_MESSAGE(),
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const isConfigured = Boolean(apiKey && selectedModel);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -28,9 +31,24 @@ export function AiChat() {
     scrollToBottom();
   }, [messages]);
 
+  const getErrorMessage = (errorType: AIErrorType): Message => {
+    switch (errorType) {
+      case AI_ERROR_TYPES.RATE_LIMITED:
+        return AI_MESSAGES.RATE_LIMITED();
+      case AI_ERROR_TYPES.INVALID_API_KEY:
+        return AI_MESSAGES.INVALID_API_KEY();
+      case AI_ERROR_TYPES.INSUFFICIENT_CREDITS:
+        return AI_MESSAGES.INSUFFICIENT_CREDITS();
+      case AI_ERROR_TYPES.MODEL_UNAVAILABLE:
+        return AI_MESSAGES.MODEL_UNAVAILABLE();
+      default:
+        return AI_MESSAGES.ERROR();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || !isConfigured) return;
 
     const userMessage: Message = {
       id: Date.now(),
@@ -48,18 +66,17 @@ export function AiChat() {
     const assistantMessage: Message = {
       id: assistantId,
       role: 'assistant',
-      content: '', // Start empty
+      content: '',
       timestamp: new Date(),
     };
 
     try {
-      // 1. Call the Server Action
-      const { output } = await generateText(selectedModel, apiKey, input);
+      const { output } = await generateText(selectedModel!, apiKey, input);
 
       // Add the empty assistant message to the state
       setMessages((prev) => [...prev, assistantMessage]);
 
-      // 2. Read the streamable value chunk by chunk
+      // Read the streamable value chunk by chunk
       for await (const delta of readStreamableValue(output)) {
         if (delta) {
           setMessages((prev) =>
@@ -73,7 +90,14 @@ export function AiChat() {
       }
     } catch (error) {
       console.error('Streaming error:', error);
-      setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES.ERROR_MESSAGE()]);
+
+      // Parse error type from the error
+      const errorType =
+        error instanceof Error && 'type' in error
+          ? (error as { type: AIErrorType }).type
+          : AI_ERROR_TYPES.UNKNOWN;
+
+      setMessages((prev) => [...prev, getErrorMessage(errorType)]);
     } finally {
       setIsLoading(false);
     }
@@ -81,15 +105,17 @@ export function AiChat() {
 
   return (
     <div className="bg-background/40 border-border flex flex-1 flex-col overflow-hidden border">
-      {/* ... Chat Header (stays the same) ... */}
+      {/* Chat Header */}
       <div className="border-border flex items-center gap-3 border-b p-3">
         <div className="bg-primary/10 border-primary/20 flex size-8 items-center justify-center border">
           <Sparkles className="text-primary size-4" />
         </div>
-        <div>
+        <div className="flex-1">
           <h3 className="text-sm font-medium">jiji</h3>
           <p className="text-muted-foreground text-xs">
-            Add transactions or ask questions
+            {isConfigured
+              ? selectedModel
+              : 'Configure API key & model in Settings'}
           </p>
         </div>
       </div>
@@ -142,7 +168,7 @@ export function AiChat() {
       </div>
 
       <div className="border-border border-t p-3">
-        {/* Quick Actions (stays the same) */}
+        {/* Quick Actions */}
         <div className="mb-3 flex flex-wrap gap-2">
           {QUICK_ACTIONS.map((action) => (
             <Button
@@ -150,6 +176,7 @@ export function AiChat() {
               variant="outline"
               size="sm"
               onClick={() => setInput(action)}
+              disabled={!isConfigured}
               className="text-muted-foreground hover:text-foreground hover:border-primary/30 h-7 text-xs transition-all"
             >
               {action}
@@ -161,16 +188,20 @@ export function AiChat() {
           <div className="flex items-center gap-2">
             <Input
               type="text"
-              placeholder='e.g. "coffee for $5"'
+              placeholder={
+                isConfigured
+                  ? 'e.g. "coffee for $5"'
+                  : 'Configure API key & model first...'
+              }
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              disabled={isLoading}
+              disabled={isLoading || !isConfigured}
               className="flex-1 text-sm"
             />
             <Button
               type="submit"
               size="sm"
-              disabled={isLoading || !input.trim()}
+              disabled={isLoading || !input.trim() || !isConfigured}
             >
               <Send className="size-4" />
             </Button>
