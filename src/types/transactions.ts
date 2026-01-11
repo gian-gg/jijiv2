@@ -1,9 +1,9 @@
 export interface Transaction {
-  id: number;
+  id?: string;
   type: 'income' | 'expense';
   category: string;
   amount: number;
   description: string;
   date: string;
-  payment_method: string | null;
+  paymentMethod: string;
 }

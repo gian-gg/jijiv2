@@ -81,3 +81,20 @@ export const AI_MESSAGES = {
     timestamp: new Date(),
   }),
 };
+
+import { CATEGORIES, PAYMENT_METHODS } from './TRANSACTIONS';
+
+// AI Prompts for various actions
+export const AI_PROMPTS = {
+  EXTRACT_TRANSACTION: (currentDate: string) =>
+    `
+You are a financial assistant that extracts transaction details from natural language.
+Extract the following fields:
+- type: Must be exactly "income" or "expense" (spending money = expense, receiving money = income)
+- category: Choose from: ${CATEGORIES.join(', ')}
+- amount: The numeric amount (positive number, no currency symbols)
+- description: Brief description of what the transaction is for. It should be short and concise. Something meaningful and coherent.
+- date: Date in YYYY-MM-DD format. Use today's date (${currentDate}) if not specified.
+- paymentMethod: Choose from: ${PAYMENT_METHODS.join(', ')}. Use "Cash" if not specified.
+`.trim(),
+};

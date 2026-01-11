@@ -172,10 +172,10 @@ export default function Transactions() {
                         <Badge variant="outline" className="text-xs">
                           {transaction.category}
                         </Badge>
-                        {transaction.payment_method && (
+                        {transaction.paymentMethod && (
                           <>
                             <span>•</span>
-                            <span>{transaction.payment_method}</span>
+                            <span>{transaction.paymentMethod}</span>
                           </>
                         )}
                       </div>

@@ -5,7 +5,7 @@ type TransactionStore = {
   transactions: Transaction[];
   addTransaction: (transaction: Transaction) => void;
   updateTransaction: (transaction: Transaction) => void;
-  removeTransaction: (id: number) => void;
+  removeTransaction: (id: string) => void;
 };
 
 const useTransactionStore = create<TransactionStore>()((set) => ({

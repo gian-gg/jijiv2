@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,8 @@ import {
   PAYMENT_METHODS,
   TRANSACTION_TYPES,
 } from '@/constants/TRANSACTIONS';
-import useTransactionStore from '@/stores/useTransactionsStore';
+import { createTransaction } from '@/lib/db/transactions';
+import { useChatStore, useTransactionStore } from '@/stores';
 import type { Message } from '@/types/home';
 import type { Transaction } from '@/types/transactions';
 import { Calendar, CreditCard, DollarSign, FileText, Tag } from 'lucide-react';
@@ -28,20 +29,20 @@ const NewTransactionDialog = ({
   open,
   onOpenChange,
   currentTransaction,
-  setMessages,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentTransaction: Transaction | null;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }) => {
   const { addTransaction } = useTransactionStore();
+  const addMessage = useChatStore((state) => state.addMessage);
 
   const [editedTransaction, setEditedTransaction] =
     useState<Transaction | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Initialize edited transaction when dialog opens
   useEffect(() => {
+    // Initialize edited transaction when dialog opens
     if (currentTransaction) {
       setEditedTransaction({ ...currentTransaction });
     }
@@ -50,37 +51,45 @@ const NewTransactionDialog = ({
   if (!currentTransaction || !editedTransaction) return null;
 
   const handleAddTransaction = async (res: Transaction) => {
-    // Add transaction locally
-    addTransaction({
-      id: Date.now(),
+    setIsSaving(true);
+
+    const transactionData: Transaction = {
+      id: crypto.randomUUID(),
       description: res.description,
       amount: res.amount,
       date: res.date,
       type: res.type ?? DEFAULT_TRANSACTION.type,
       category: res.category ?? DEFAULT_TRANSACTION.category,
-      payment_method: res.payment_method ?? DEFAULT_TRANSACTION.payment_method,
-    });
-
-    // UI feedback message
-    const assistantMessage: Message = {
-      id: Date.now(),
-      role: 'assistant',
-      content: `Got it! I've added ${res.type === 'income' ? 'income' : 'expense'}: ${res.description} for $${Math.abs(res.amount).toFixed(2)} in ${res.category}.`,
-      timestamp: new Date(),
+      paymentMethod: res.paymentMethod ?? DEFAULT_TRANSACTION.paymentMethod,
     };
-    setMessages((prev) => [...prev, assistantMessage]);
 
-    // add to database here later
+    const result = await createTransaction(transactionData);
 
-    // close dialog
-    onOpenChange(false);
+    if (result.success) {
+      addTransaction(transactionData);
+
+      const assistantMessage: Message = {
+        id: Date.now(),
+        role: 'assistant',
+        content: `Got it! I've added ${res.type === 'income' ? 'income' : 'expense'}: ${res.description} for $${Math.abs(res.amount).toFixed(2)} in ${res.category}.`,
+        timestamp: new Date(),
+      };
+      addMessage(assistantMessage);
+      onOpenChange(false);
+    } else {
+      addMessage({
+        id: Date.now(),
+        role: 'assistant',
+        content: 'Oops! Failed to save the transaction. Please try again.',
+        timestamp: new Date(),
+      });
+    }
+
+    setIsSaving(false);
   };
 
   const handleCancel = () => {
-    // UI feedback message
-    setMessages((prev) => [...prev, AI_CONSTANT_MESSAGES.CANCELLED_MESSAGE()]);
-
-    // close dialog
+    addMessage(AI_CONSTANT_MESSAGES.CANCELLED_MESSAGE());
     onOpenChange(false);
   };
 
@@ -118,6 +127,7 @@ const NewTransactionDialog = ({
                   }
                   className="h-auto flex-col gap-1 py-3 font-mono"
                   onClick={() => updateField('type', type.value)}
+                  disabled={isSaving}
                 >
                   {type.icon}
                   <span className="text-xs">{type.label}</span>
@@ -141,6 +151,7 @@ const NewTransactionDialog = ({
               onChange={(e) => updateField('description', e.target.value)}
               className="font-mono"
               placeholder="e.g., Lunch at cafe"
+              disabled={isSaving}
             />
           </div>
 
@@ -164,6 +175,7 @@ const NewTransactionDialog = ({
                 }
                 className="font-mono"
                 placeholder="0.00"
+                disabled={isSaving}
               />
             </div>
 
@@ -181,6 +193,7 @@ const NewTransactionDialog = ({
                 value={editedTransaction.date}
                 onChange={(e) => updateField('date', e.target.value)}
                 className="font-mono"
+                disabled={isSaving}
               />
             </div>
           </div>
@@ -218,12 +231,12 @@ const NewTransactionDialog = ({
                 <Badge
                   key={method}
                   variant={
-                    editedTransaction.payment_method === method
+                    editedTransaction.paymentMethod === method
                       ? 'default'
                       : 'secondary'
                   }
                   className="cursor-pointer font-mono transition-all hover:scale-105"
-                  onClick={() => updateField('payment_method', method)}
+                  onClick={() => updateField('paymentMethod', method)}
                 >
                   {method}
                 </Badge>
@@ -256,6 +269,7 @@ const NewTransactionDialog = ({
             variant="secondary"
             onClick={handleCancel}
             className="font-mono"
+            disabled={isSaving}
           >
             Cancel
           </Button>
@@ -263,10 +277,12 @@ const NewTransactionDialog = ({
             onClick={() => handleAddTransaction(editedTransaction)}
             className="font-mono"
             disabled={
-              !editedTransaction.description || editedTransaction.amount === 0
+              isSaving ||
+              !editedTransaction.description ||
+              editedTransaction.amount === 0
             }
           >
-            Add Transaction
+            {isSaving ? 'Saving...' : 'Add Transaction'}
           </Button>
         </DialogFooter>
       </DialogContent>

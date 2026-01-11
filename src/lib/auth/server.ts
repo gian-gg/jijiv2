@@ -9,3 +9,13 @@ export async function getSession() {
 
   return session;
 }
+
+export async function sessionGuard() {
+  const session = await getSession();
+
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized');
+  }
+
+  return session;
+}

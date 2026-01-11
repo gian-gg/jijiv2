@@ -69,7 +69,7 @@ export const QUICK_ACTIONS = [
 export const DEFAULT_TRANSACTION = {
   type: 'expense' as const,
   category: 'Other',
-  payment_method: 'Unknown',
+  paymentMethod: 'Unknown',
 };
 
 /**
