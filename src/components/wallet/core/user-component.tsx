@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { SettingsDialog } from '@/components/wallet/core/settings-dialog';
 
 import { signOut } from '@/lib/auth/client';
 import { useRouter } from 'next/navigation';
@@ -24,6 +25,7 @@ import { getInitials } from '@/lib/helpers/user';
 export default function UserComponent({ user }: { user: User }) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Guard clause for invalid user data
   if (!user || !user.name || !user.email) {
@@ -48,61 +50,64 @@ export default function UserComponent({ user }: { user: User }) {
   const userInitials = getInitials(user.name);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="cursor-pointer transition-opacity hover:opacity-80">
-        <Avatar className="border-primary/20 size-8 border text-xs">
-          {user.image && <AvatarImage src={user.image} alt={user.name} />}
-          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-            {userInitials}
-          </AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
+    <>
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <DropdownMenu>
+        <DropdownMenuTrigger className="cursor-pointer transition-opacity hover:opacity-80">
+          <Avatar className="border-primary/20 size-8 border text-xs">
+            {user.image && <AvatarImage src={user.image} alt={user.name} />}
+            <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+              {userInitials}
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent side="bottom" align="end" className="w-56">
-        <DropdownMenuLabel>
-          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <Avatar className="border-primary/20 size-8 border">
-              {user.image && <AvatarImage src={user.image} alt={user.name} />}
-              <AvatarFallback className="bg-primary/10 text-primary">
-                {userInitials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">{user.name}</span>
-              <span className="text-muted-foreground truncate text-xs">
-                {user.email}
-              </span>
+        <DropdownMenuContent side="bottom" align="end" className="w-56">
+          <DropdownMenuLabel>
+            <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              <Avatar className="border-primary/20 size-8 border">
+                {user.image && <AvatarImage src={user.image} alt={user.name} />}
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  {userInitials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user.name}</span>
+                <span className="text-muted-foreground truncate text-xs">
+                  {user.email}
+                </span>
+              </div>
             </div>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Settings2 className="mr-2 size-4" />
-            Settings
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => setSettingsOpen(true)}>
+              <Settings2 className="mr-2 size-4" />
+              Settings
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <BadgeCheck className="mr-2 size-4" />
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <CreditCard className="mr-2 size-4" />
+              Wallet
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={handleSignOut}
+            disabled={isPending}
+            variant="destructive"
+          >
+            <LogOut className="mr-2 size-4" />
+            Sign Out
           </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BadgeCheck className="mr-2 size-4" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard className="mr-2 size-4" />
-            Wallet
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={handleSignOut}
-          disabled={isPending}
-          variant="destructive"
-        >
-          <LogOut className="mr-2 size-4" />
-          Sign Out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 }
