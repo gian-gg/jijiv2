@@ -1,26 +1,19 @@
-'use client';
-
-import useTransactionStore from '@/stores/useTransactionsStore';
+import { getFinancialStats } from '@/lib/db/transactions';
 import { TrendingDown, TrendingUp, Wallet } from 'lucide-react';
 
-export function QuickInfo() {
-  const { transactions } = useTransactionStore();
-
-  const income = transactions
-    .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const expenses = transactions
-    .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
-  const balance = income - expenses;
+export async function QuickInfo() {
+  const statsRes = await getFinancialStats();
+  const data =
+    statsRes.success && statsRes.data
+      ? statsRes.data
+      : { income: 0, expenses: 0, balance: 0, transactionCount: 0 };
+  const { income, expenses, balance, transactionCount } = data;
 
   const stats = [
     {
       title: 'Balance',
       value: `$${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      description: `${transactions.length} transactions`,
+      description: `${transactionCount} transactions`,
       icon: Wallet,
       iconBg: balance >= 0 ? 'bg-success/10' : 'bg-destructive/10',
       iconBorder: balance >= 0 ? 'border-success/20' : 'border-destructive/20',

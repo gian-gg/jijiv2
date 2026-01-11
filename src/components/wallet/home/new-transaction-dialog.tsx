@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -19,8 +20,9 @@ import {
   PAYMENT_METHODS,
   TRANSACTION_TYPES,
 } from '@/constants/TRANSACTIONS';
+
 import { createTransaction } from '@/lib/db/transactions';
-import { useChatStore, useTransactionStore } from '@/stores';
+import { useChatStore } from '@/stores';
 import type { Message } from '@/types/home';
 import type { Transaction } from '@/types/transactions';
 import { Calendar, CreditCard, DollarSign, FileText, Tag } from 'lucide-react';
@@ -34,7 +36,6 @@ const NewTransactionDialog = ({
   onOpenChange: (open: boolean) => void;
   currentTransaction: Transaction | null;
 }) => {
-  const { addTransaction } = useTransactionStore();
   const addMessage = useChatStore((state) => state.addMessage);
 
   const [editedTransaction, setEditedTransaction] =
@@ -66,8 +67,6 @@ const NewTransactionDialog = ({
     const result = await createTransaction(transactionData);
 
     if (result.success) {
-      addTransaction(transactionData);
-
       const assistantMessage: Message = {
         id: Date.now(),
         role: 'assistant',

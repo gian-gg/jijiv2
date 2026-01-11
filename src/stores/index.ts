@@ -1,5 +1,4 @@
 // Export all stores
-export { default as useTransactionStore } from './useTransactionsStore';
 export { default as useSettingsStore } from './useSettingsStore';
 export { default as useChatStore } from './useChatStore';
 
