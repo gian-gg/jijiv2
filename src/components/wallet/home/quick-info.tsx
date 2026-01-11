@@ -1,11 +1,11 @@
 'use client';
 
 import useTransactionStore from '@/stores/useTransactionsStore';
-import { Calendar, TrendingDown, TrendingUp } from 'lucide-react';
+import { TrendingDown, TrendingUp, Wallet } from 'lucide-react';
 
 export function QuickInfo() {
   const { transactions } = useTransactionStore();
-  // Calculate stats
+
   const income = transactions
     .filter((t) => t.type === 'income')
     .reduce((sum, t) => sum + t.amount, 0);
@@ -16,37 +16,33 @@ export function QuickInfo() {
 
   const balance = income - expenses;
 
-  // Mock data for upcoming payments and budget usage (would come from actual data in production)
-  const upcomingPayments = 3;
-  const budgetUsed = expenses > 0 ? ((expenses / 1500) * 100).toFixed(0) : '0';
-
   const stats = [
     {
       title: 'Balance',
       value: `$${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       description: `${transactions.length} transactions`,
-      icon: TrendingUp,
+      icon: Wallet,
       iconBg: balance >= 0 ? 'bg-success/10' : 'bg-destructive/10',
       iconBorder: balance >= 0 ? 'border-success/20' : 'border-destructive/20',
       iconColor: balance >= 0 ? 'text-success' : 'text-destructive',
     },
     {
-      title: 'Budget Used',
-      value: `${budgetUsed}%`,
-      description: 'of monthly budget',
-      icon: TrendingDown,
-      iconBg: 'bg-primary/10',
-      iconBorder: 'border-primary/20',
-      iconColor: 'text-primary',
+      title: 'Income',
+      value: `$${income.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      description: 'total earned',
+      icon: TrendingUp,
+      iconBg: 'bg-success/10',
+      iconBorder: 'border-success/20',
+      iconColor: 'text-success',
     },
     {
-      title: 'Upcoming',
-      value: `${upcomingPayments}`,
-      description: 'payments due soon',
-      icon: Calendar,
-      iconBg: 'bg-warning/10',
-      iconBorder: 'border-warning/20',
-      iconColor: 'text-warning',
+      title: 'Expenses',
+      value: `$${expenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      description: 'total spent',
+      icon: TrendingDown,
+      iconBg: 'bg-destructive/10',
+      iconBorder: 'border-destructive/20',
+      iconColor: 'text-destructive',
     },
   ];
 
@@ -60,7 +56,6 @@ export function QuickInfo() {
             className="bg-background/40 border-border relative overflow-hidden border p-3"
           >
             <div className="relative flex flex-col gap-2">
-              {/* Icon and Label */}
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase md:text-xs">
                   {stat.title}
@@ -72,12 +67,10 @@ export function QuickInfo() {
                 </div>
               </div>
 
-              {/* Value */}
               <div className="text-lg leading-none font-bold tabular-nums">
                 {stat.value}
               </div>
 
-              {/* Description */}
               <div className="text-muted-foreground text-xs">
                 {stat.description}
               </div>

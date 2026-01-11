@@ -3,21 +3,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { usePathname } from 'next/navigation';
 
-import { Home, List, ListCollapse, PieChart } from 'lucide-react';
+import { List, MessageSquare } from 'lucide-react';
 
 const NAV = [
-  { name: 'Home', href: '/wallet', icon: Home },
-  {
-    name: 'Transactions',
-    href: '/wallet/transactions',
-    icon: List,
-  },
-  { name: 'Categories', href: '/wallet/categories', icon: ListCollapse },
-  {
-    name: 'Analytics',
-    href: '/wallet/analytics',
-    icon: PieChart,
-  },
+  { name: 'Chat', href: '/wallet', icon: MessageSquare },
+  { name: 'Transactions', href: '/wallet/transactions', icon: List },
 ];
 
 const Navigation = () => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { BadgeCheck, CreditCard, LogOut, Settings2 } from 'lucide-react';
+import { LogOut, Settings2 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -27,7 +27,6 @@ export default function UserComponent({ user }: { user: User }) {
   const [isPending, setIsPending] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  // Guard clause for invalid user data
   if (!user || !user.name || !user.email) {
     return null;
   }
@@ -84,17 +83,6 @@ export default function UserComponent({ user }: { user: User }) {
             <DropdownMenuItem onClick={() => setSettingsOpen(true)}>
               <Settings2 className="mr-2 size-4" />
               Settings
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <BadgeCheck className="mr-2 size-4" />
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard className="mr-2 size-4" />
-              Wallet
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
