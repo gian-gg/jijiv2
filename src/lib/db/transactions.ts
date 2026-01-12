@@ -158,3 +158,51 @@ export async function getTransactions(
     return { success: false, error };
   }
 }
+
+export async function updateTransaction(
+  id: string,
+  data: Partial<Transaction>
+) {
+  try {
+    const session = await sessionGuard();
+
+    const result = await db
+      .update(transaction)
+      .set({
+        ...data,
+        amount: data.amount ? String(data.amount) : undefined,
+      })
+      .where(
+        and(eq(transaction.id, id), eq(transaction.userId, session.user.id))
+      )
+      .returning();
+
+    revalidatePath('/wallet');
+    revalidatePath('/wallet/transactions');
+
+    return { success: true, data: result[0] };
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    return { success: false, error };
+  }
+}
+
+export async function deleteTransaction(id: string) {
+  try {
+    const session = await sessionGuard();
+
+    await db
+      .delete(transaction)
+      .where(
+        and(eq(transaction.id, id), eq(transaction.userId, session.user.id))
+      );
+
+    revalidatePath('/wallet');
+    revalidatePath('/wallet/transactions');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting transaction:', error);
+    return { success: false, error };
+  }
+}

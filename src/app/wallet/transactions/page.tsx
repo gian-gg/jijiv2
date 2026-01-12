@@ -14,7 +14,11 @@ import { PageHeader } from '@/components/wallet/core';
 import { EmptyState, FilterButtons } from '@/components/wallet/ui';
 import { TransactionDialog } from '@/components/wallet/home';
 
-import { getTransactions } from '@/lib/db/transactions';
+import {
+  getTransactions,
+  updateTransaction,
+  deleteTransaction,
+} from '@/lib/db/transactions';
 import type { Transaction } from '@/types/transactions';
 import {
   ChevronLeft,
@@ -45,21 +49,29 @@ export default function Transactions() {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
 
+  // Refetch trigger
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
   const handleTransactionClick = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     setDialogOpen(true);
   };
 
-  const handleSave = (transaction: Transaction) => {
-    // UI only - placeholder for future server action
-    console.log('Save transaction:', transaction);
-    setDialogOpen(false);
+  const handleSave = async (transaction: Transaction) => {
+    if (!transaction.id) return;
+    const result = await updateTransaction(transaction.id, transaction);
+    if (result.success) {
+      setDialogOpen(false);
+      setRefetchTrigger((prev) => prev + 1);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    // UI only - placeholder for future server action
-    console.log('Delete transaction:', id);
-    setDialogOpen(false);
+  const handleDelete = async (id: string) => {
+    const result = await deleteTransaction(id);
+    if (result.success) {
+      setDialogOpen(false);
+      setRefetchTrigger((prev) => prev + 1);
+    }
   };
 
   useEffect(() => {
@@ -88,7 +100,7 @@ export default function Transactions() {
     };
 
     fetchTransactions();
-  }, [filter, searchQuery, page, sort]);
+  }, [filter, searchQuery, page, sort, refetchTrigger]);
 
   // Reset page when filter or search changes
   useEffect(() => {
