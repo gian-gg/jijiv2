@@ -1,5 +1,6 @@
 import { getFinancialStats } from '@/lib/db/transactions';
 import { TrendingDown, TrendingUp, Wallet } from 'lucide-react';
+import { CurrencyAmount } from '@/components/wallet/ui';
 
 export async function QuickInfo() {
   const statsRes = await getFinancialStats();
@@ -12,7 +13,7 @@ export async function QuickInfo() {
   const stats = [
     {
       title: 'Balance',
-      value: `$${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      amount: balance,
       description: `${transactionCount} transactions`,
       icon: Wallet,
       iconBg: balance >= 0 ? 'bg-success/10' : 'bg-destructive/10',
@@ -21,7 +22,7 @@ export async function QuickInfo() {
     },
     {
       title: 'Income',
-      value: `$${income.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      amount: income,
       description: 'total earned',
       icon: TrendingUp,
       iconBg: 'bg-success/10',
@@ -30,7 +31,7 @@ export async function QuickInfo() {
     },
     {
       title: 'Expenses',
-      value: `$${expenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      amount: expenses,
       description: 'total spent',
       icon: TrendingDown,
       iconBg: 'bg-destructive/10',
@@ -61,7 +62,7 @@ export async function QuickInfo() {
               </div>
 
               <div className="text-lg leading-none font-bold tabular-nums">
-                {stat.value}
+                <CurrencyAmount amount={stat.amount} />
               </div>
 
               <div className="text-muted-foreground text-xs">

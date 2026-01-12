@@ -116,7 +116,10 @@ export function AiChat() {
                   >
                     {message.content}
                   </div>
-                  <p className="text-muted-foreground text-xs">
+                  <p
+                    className="text-muted-foreground text-xs"
+                    suppressHydrationWarning
+                  >
                     {message.timestamp.toLocaleTimeString('en-US', {
                       hour: '2-digit',
                       minute: '2-digit',

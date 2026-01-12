@@ -1,12 +1,22 @@
+import type { ModelId } from '@/constants/AI';
+import { type CurrencyCode, DEFAULT_CURRENCY } from '@/constants/SETTINGS';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { ModelId } from '@/constants/AI';
+
+// Re-export for convenience
+export {
+  CURRENCIES,
+  getCurrencySymbol,
+  type CurrencyCode,
+} from '@/constants/SETTINGS';
 
 interface SettingsStore {
   selectedModel: ModelId | null;
   apiKey: string;
+  currency: CurrencyCode;
   setSelectedModel: (model: ModelId | null) => void;
   setApiKey: (key: string) => void;
+  setCurrency: (currency: CurrencyCode) => void;
   reset: () => void;
 }
 
@@ -15,9 +25,12 @@ const useSettingsStore = create<SettingsStore>()(
     (set) => ({
       selectedModel: null,
       apiKey: '',
+      currency: DEFAULT_CURRENCY,
       setSelectedModel: (model) => set({ selectedModel: model }),
       setApiKey: (key) => set({ apiKey: key }),
-      reset: () => set({ selectedModel: null, apiKey: '' }),
+      setCurrency: (currency) => set({ currency }),
+      reset: () =>
+        set({ selectedModel: null, apiKey: '', currency: DEFAULT_CURRENCY }),
     }),
     {
       name: 'jiji-settings',

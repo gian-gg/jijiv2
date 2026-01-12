@@ -11,7 +11,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/wallet/core';
-import { EmptyState, FilterButtons } from '@/components/wallet/ui';
+import {
+  EmptyState,
+  FilterButtons,
+  CurrencyAmount,
+} from '@/components/wallet/ui';
 import { TransactionDialog } from '@/components/wallet/home';
 
 import {
@@ -287,8 +291,11 @@ export default function Transactions() {
                           : 'text-foreground'
                       }`}
                     >
-                      {transaction.type === 'income' ? '+' : '-'}$
-                      {Math.abs(transaction.amount).toFixed(2)}
+                      <CurrencyAmount
+                        amount={transaction.amount}
+                        showSign
+                        type={transaction.type}
+                      />
                     </p>
                     <Badge
                       variant="outline"

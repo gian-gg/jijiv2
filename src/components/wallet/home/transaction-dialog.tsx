@@ -29,6 +29,8 @@ import {
 
 import { createTransaction } from '@/lib/db/transactions';
 import { useChatStore } from '@/stores';
+import useSettingsStore from '@/stores/useSettingsStore';
+import { getCurrencySymbol } from '@/constants/SETTINGS';
 import type { Message } from '@/types/home';
 import type { Transaction } from '@/types/transactions';
 import { Loader2, Trash2 } from 'lucide-react';
@@ -53,6 +55,8 @@ const TransactionDialog = ({
   onDelete,
 }: TransactionDialogProps) => {
   const addMessage = useChatStore((state) => state.addMessage);
+  const currency = useSettingsStore((state) => state.currency);
+  const currencySymbol = getCurrencySymbol(currency);
 
   const [editedTransaction, setEditedTransaction] =
     useState<Transaction | null>(null);
@@ -103,7 +107,7 @@ const TransactionDialog = ({
         const assistantMessage: Message = {
           id: Date.now(),
           role: 'assistant',
-          content: `Got it! I've added ${res.type === 'income' ? 'income' : 'expense'}: ${res.description} for $${Math.abs(res.amount).toFixed(2)} in ${res.category}.`,
+          content: `Got it! I've added ${res.type === 'income' ? 'income' : 'expense'}: ${res.description} for ${currencySymbol}${Math.abs(res.amount).toFixed(2)} in ${res.category}.`,
           timestamp: new Date(),
         };
         addMessage(assistantMessage);
@@ -195,7 +199,7 @@ const TransactionDialog = ({
               <Label htmlFor="amount">Amount</Label>
               <div className="relative">
                 <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-                  $
+                  {currencySymbol}
                 </span>
                 <Input
                   id="amount"

@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import useSettingsStore from '@/stores/useSettingsStore';
+import { CURRENCIES, type CurrencyCode } from '@/constants/SETTINGS';
 import { AVAILABLE_MODELS, type ModelId } from '@/constants/AI';
 import { Eye, EyeOff, Key, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -32,12 +33,15 @@ interface SettingsDialogProps {
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const selectedModel = useSettingsStore((state) => state.selectedModel);
   const apiKey = useSettingsStore((state) => state.apiKey);
+  const currency = useSettingsStore((state) => state.currency);
   const setSelectedModel = useSettingsStore((state) => state.setSelectedModel);
   const setApiKey = useSettingsStore((state) => state.setApiKey);
+  const setCurrency = useSettingsStore((state) => state.setCurrency);
   const reset = useSettingsStore((state) => state.reset);
 
   const [localModel, setLocalModel] = useState<ModelId | null>(selectedModel);
   const [localApiKey, setLocalApiKey] = useState(apiKey);
+  const [localCurrency, setLocalCurrency] = useState<CurrencyCode>(currency);
   const [showApiKey, setShowApiKey] = useState(false);
 
   // Sync local state with store when dialog opens or store changes
@@ -45,8 +49,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     if (open) {
       setLocalModel(selectedModel);
       setLocalApiKey(apiKey);
+      setLocalCurrency(currency);
     }
-  }, [open, selectedModel, apiKey]);
+  }, [open, selectedModel, apiKey, currency]);
 
   const canSave = localApiKey.trim().length > 0 && localModel !== null;
 
@@ -61,6 +66,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     }
     setSelectedModel(localModel);
     setApiKey(localApiKey.trim());
+    setCurrency(localCurrency);
     toast.success('Settings saved');
     onOpenChange(false);
   };
@@ -69,6 +75,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     reset();
     setLocalModel(null);
     setLocalApiKey('');
+    setLocalCurrency('USD');
     toast.success('Settings reset');
   };
 
@@ -77,6 +84,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       // Reset local state when opening
       setLocalModel(selectedModel);
       setLocalApiKey(apiKey);
+      setLocalCurrency(currency);
     }
     onOpenChange(isOpen);
   };
@@ -87,7 +95,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
-            Configure your AI model and API key for OpenRouter.
+            All configurations are stored client-side only.{' '}
+            <a href="#" className="text-primary hover:underline">
+              Learn more
+            </a>
           </DialogDescription>
         </DialogHeader>
 
@@ -172,6 +183,32 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               >
                 openrouter.ai/keys
               </a>
+            </p>
+          </div>
+
+          {/* Currency Selection */}
+          <div className="space-y-2">
+            <Label htmlFor="currency">Currency</Label>
+            <Select
+              value={localCurrency}
+              onValueChange={(value) => setLocalCurrency(value as CurrencyCode)}
+            >
+              <SelectTrigger id="currency" className="w-full">
+                <SelectValue placeholder="Select currency" />
+              </SelectTrigger>
+              <SelectContent>
+                {CURRENCIES.map((curr) => (
+                  <SelectItem key={curr.code} value={curr.code}>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono">{curr.symbol}</span>
+                      <span>{curr.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-muted-foreground text-xs">
+              This is for display only – no conversion is applied.
             </p>
           </div>
         </div>
