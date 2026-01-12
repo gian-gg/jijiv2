@@ -10,7 +10,7 @@ import { Send, Sparkles, User } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { extractTransaction } from '@/lib/ai/transaction';
 import { useSettingsStore, useChatStore } from '@/stores';
-import { NewTransactionDialog } from '@/components/wallet/home';
+import { TransactionDialog } from '@/components/wallet/home';
 import { type Transaction } from '@/types/transactions';
 
 export function AiChat() {
@@ -70,10 +70,11 @@ export function AiChat() {
 
   return (
     <>
-      <NewTransactionDialog
-        currentTransaction={currentTransaction}
+      <TransactionDialog
+        transaction={currentTransaction}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+        mode="new"
       />
       <div className="bg-background/40 border-border flex flex-1 flex-col overflow-hidden border">
         {/* Chat Header */}

@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/wallet/core';
 import { EmptyState, FilterButtons } from '@/components/wallet/ui';
+import { TransactionDialog } from '@/components/wallet/home';
 
 import { getTransactions } from '@/lib/db/transactions';
 import type { Transaction } from '@/types/transactions';
@@ -38,6 +39,28 @@ export default function Transactions() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [sort, setSort] = useState('date-desc');
+
+  // Edit dialog state
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+
+  const handleTransactionClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setDialogOpen(true);
+  };
+
+  const handleSave = (transaction: Transaction) => {
+    // UI only - placeholder for future server action
+    console.log('Save transaction:', transaction);
+    setDialogOpen(false);
+  };
+
+  const handleDelete = (id: string) => {
+    // UI only - placeholder for future server action
+    console.log('Delete transaction:', id);
+    setDialogOpen(false);
+  };
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -173,11 +196,12 @@ export default function Transactions() {
               transactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="hover:bg-accent/5 flex items-center justify-between p-4 transition-colors"
+                  onClick={() => handleTransactionClick(transaction)}
+                  className="hover:bg-accent/5 flex cursor-pointer items-center justify-between p-3 transition-colors sm:p-4"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 overflow-hidden sm:gap-4">
                     <div
-                      className={`flex size-10 items-center justify-center border ${
+                      className={`flex size-8 shrink-0 items-center justify-center rounded-full border sm:size-10 ${
                         transaction.type === 'income'
                           ? 'border-success/20 bg-success/10'
                           : 'border-destructive/20 bg-destructive/10'
@@ -186,15 +210,15 @@ export default function Transactions() {
                       {transaction.type === 'income' ? (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
+                          width="16"
+                          height="16"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className="text-success"
+                          className="text-success size-4 sm:size-5"
                         >
                           <line x1="12" y1="19" x2="12" y2="5"></line>
                           <polyline points="5 12 12 5 19 12"></polyline>
@@ -202,15 +226,15 @@ export default function Transactions() {
                       ) : (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
+                          width="16"
+                          height="16"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className="text-destructive"
+                          className="text-destructive size-4 sm:size-5"
                         >
                           <line x1="12" y1="5" x2="12" y2="19"></line>
                           <polyline points="19 12 12 19 5 12"></polyline>
@@ -218,29 +242,34 @@ export default function Transactions() {
                       )}
                     </div>
 
-                    <div className="flex flex-col">
-                      <p className="text-sm font-medium">
+                    <div className="flex flex-col overflow-hidden">
+                      <p className="truncate pr-2 text-sm font-medium">
                         {transaction.description}
                       </p>
-                      <div className="text-muted-foreground flex items-center gap-2 text-xs">
-                        <span>{transaction.date}</span>
+                      <div className="text-muted-foreground flex items-center gap-2 truncate text-xs">
+                        <span className="shrink-0">{transaction.date}</span>
                         <span>•</span>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge
+                          variant="outline"
+                          className="h-5 px-1.5 py-0 text-[10px] sm:text-xs"
+                        >
                           {transaction.category}
                         </Badge>
                         {transaction.paymentMethod && (
-                          <>
+                          <span className="hidden items-center gap-2 sm:flex">
                             <span>•</span>
-                            <span>{transaction.paymentMethod}</span>
-                          </>
+                            <span className="truncate">
+                              {transaction.paymentMethod}
+                            </span>
+                          </span>
                         )}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="ml-2 flex shrink-0 flex-col items-end gap-1">
                     <p
-                      className={`text-sm font-bold ${
+                      className={`text-sm font-bold whitespace-nowrap ${
                         transaction.type === 'income'
                           ? 'text-success'
                           : 'text-foreground'
@@ -249,7 +278,10 @@ export default function Transactions() {
                       {transaction.type === 'income' ? '+' : '-'}$
                       {Math.abs(transaction.amount).toFixed(2)}
                     </p>
-                    <Badge variant="outline" className="text-xs capitalize">
+                    <Badge
+                      variant="outline"
+                      className="h-5 px-1.5 py-0 text-[10px] capitalize sm:text-xs"
+                    >
                       {transaction.type}
                     </Badge>
                   </div>
@@ -286,6 +318,16 @@ export default function Transactions() {
           </div>
         </div>
       </Card>
+
+      {/* Edit Transaction Dialog */}
+      <TransactionDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        transaction={selectedTransaction}
+        mode="edit"
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </>
   );
 }
