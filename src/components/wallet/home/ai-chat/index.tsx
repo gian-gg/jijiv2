@@ -16,6 +16,8 @@ import { getAIErrorMessage } from '@/lib/helpers/ai-error';
 export function AiChat() {
   const apiKey = useSettingsStore((state) => state.apiKey);
   const selectedModel = useSettingsStore((state) => state.selectedModel);
+  const apiProvider = useSettingsStore((state) => state.apiProvider);
+  const currency = useSettingsStore((state) => state.currency);
   const storedMessages = useChatStore((state) => state.messages);
   const setStoredMessages = useChatStore((state) => state.setMessages);
   const [input, setInput] = useState('');
@@ -28,6 +30,8 @@ export function AiChat() {
   // Refs for stable references
   const apiKeyRef = useRef(apiKey);
   const modelRef = useRef(selectedModel);
+  const providerRef = useRef(apiProvider);
+  const currencyRef = useRef(currency);
   const hasRestoredMessages = useRef(false);
   const setMessagesRef =
     useRef<
@@ -41,6 +45,8 @@ export function AiChat() {
         body: () => ({
           apiKey: apiKeyRef.current,
           modelId: modelRef.current,
+          apiProvider: providerRef.current,
+          currency: currencyRef.current,
         }),
       }),
       onToolCall: ({ toolCall }) => {
@@ -88,7 +94,9 @@ export function AiChat() {
   useEffect(() => {
     apiKeyRef.current = apiKey;
     modelRef.current = selectedModel;
-  }, [apiKey, selectedModel]);
+    providerRef.current = apiProvider;
+    currencyRef.current = currency;
+  }, [apiKey, selectedModel, apiProvider, currency]);
 
   const isLoading = status === 'submitted' || status === 'streaming';
   const isConfigured = Boolean(apiKey && selectedModel);

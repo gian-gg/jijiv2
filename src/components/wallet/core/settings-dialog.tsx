@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import useSettingsStore from '@/stores/useSettingsStore';
 import { CURRENCIES, type CurrencyCode } from '@/constants/SETTINGS';
-import { AVAILABLE_MODELS } from '@/constants/AI';
+import { AVAILABLE_MODELS, GEMINI_MODELS } from '@/constants/AI';
 import { Eye, EyeOff, Key, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -33,33 +33,35 @@ interface SettingsDialogProps {
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const selectedModel = useSettingsStore((state) => state.selectedModel);
   const apiKey = useSettingsStore((state) => state.apiKey);
+  const apiProvider = useSettingsStore((state) => state.apiProvider);
   const currency = useSettingsStore((state) => state.currency);
   const setSelectedModel = useSettingsStore((state) => state.setSelectedModel);
   const setApiKey = useSettingsStore((state) => state.setApiKey);
+  const setApiProvider = useSettingsStore((state) => state.setApiProvider);
   const setCurrency = useSettingsStore((state) => state.setCurrency);
   const reset = useSettingsStore((state) => state.reset);
 
   const [localModel, setLocalModel] = useState<string | null>(selectedModel);
   const [isCustomModel, setIsCustomModel] = useState(false);
+  const [localProvider, setLocalProvider] = useState(apiProvider);
   const [localApiKey, setLocalApiKey] = useState(apiKey);
   const [localCurrency, setLocalCurrency] = useState<CurrencyCode>(currency);
   const [showApiKey, setShowApiKey] = useState(false);
 
-  // Check if current model is custom (not in predefined list)
   const isModelCustom = (model: string | null) => {
     if (!model) return false;
     return !AVAILABLE_MODELS.some((m) => m.id === model);
   };
 
-  // Sync local state with store when dialog opens or store changes
   useEffect(() => {
     if (open) {
       setLocalModel(selectedModel);
       setIsCustomModel(isModelCustom(selectedModel));
+      setLocalProvider(apiProvider);
       setLocalApiKey(apiKey);
       setLocalCurrency(currency);
     }
-  }, [open, selectedModel, apiKey, currency]);
+  }, [open, selectedModel, apiKey, apiProvider, currency]);
 
   const canSave =
     localApiKey.trim().length > 0 &&
@@ -77,6 +79,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     }
     setSelectedModel(localModel.trim());
     setApiKey(localApiKey.trim());
+    setApiProvider(localProvider);
     setCurrency(localCurrency);
     toast.success('Settings saved');
     onOpenChange(false);
@@ -86,6 +89,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     reset();
     setLocalModel(null);
     setIsCustomModel(false);
+    setLocalProvider('openrouter');
     setLocalApiKey('');
     setLocalCurrency('USD');
     toast.success('Settings reset');
@@ -96,6 +100,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       // Reset local state when opening
       setLocalModel(selectedModel);
       setIsCustomModel(isModelCustom(selectedModel));
+      setLocalProvider(apiProvider);
       setLocalApiKey(apiKey);
       setLocalCurrency(currency);
     }
@@ -112,6 +117,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     }
   };
 
+  const handleProviderChange = (provider: 'openrouter' | 'gemini') => {
+    setLocalProvider(provider);
+    setLocalModel(null);
+    setIsCustomModel(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -126,6 +137,30 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          {/* API Provider Selection */}
+          <div className="space-y-2">
+            <Label>API Provider</Label>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant={localProvider === 'openrouter' ? 'default' : 'outline'}
+                size="sm"
+                className="flex-1"
+                onClick={() => handleProviderChange('openrouter')}
+              >
+                OpenRouter
+              </Button>
+              <Button
+                type="button"
+                variant={localProvider === 'gemini' ? 'default' : 'outline'}
+                size="sm"
+                className="flex-1"
+                onClick={() => handleProviderChange('gemini')}
+              >
+                Gemini
+              </Button>
+            </div>
+          </div>
           {/* Model Selection */}
           <div className="space-y-2">
             <Label htmlFor="model">
@@ -161,7 +196,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   <SelectValue placeholder="Select a model" />
                 </SelectTrigger>
                 <SelectContent>
-                  {AVAILABLE_MODELS.map((model) => (
+                  {(localProvider === 'gemini'
+                    ? GEMINI_MODELS
+                    : AVAILABLE_MODELS
+                  ).map((model) => (
                     <SelectItem key={model.id} value={model.id}>
                       <div className="flex items-center gap-2">
                         <span>{model.name}</span>
@@ -180,12 +218,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <p className="text-muted-foreground text-xs">
               Browse models at{' '}
               <a
-                href="https://openrouter.ai/models"
+                href={
+                  localProvider === 'gemini'
+                    ? 'https://ai.google.dev/gemini-api/docs/models/gemini'
+                    : 'https://openrouter.ai/models'
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
               >
-                openrouter.ai/models
+                {localProvider === 'gemini'
+                  ? 'ai.google.dev'
+                  : 'openrouter.ai/models'}
               </a>
             </p>
           </div>
@@ -193,7 +237,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           {/* API Key Input */}
           <div className="space-y-2">
             <Label htmlFor="apiKey">
-              OpenRouter API Key <span className="text-destructive">*</span>
+              {localProvider === 'gemini' ? 'Gemini' : 'OpenRouter'} API Key{' '}
+              <span className="text-destructive">*</span>
             </Label>
             <div className="flex gap-2">
               <div className="relative flex-1">
@@ -201,7 +246,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <Input
                   id="apiKey"
                   type={showApiKey ? 'text' : 'password'}
-                  placeholder="sk-or-..."
+                  placeholder={
+                    localProvider === 'gemini' ? 'AIza...' : 'sk-or-...'
+                  }
                   value={localApiKey}
                   onChange={(e) => setLocalApiKey(e.target.value)}
                   className="pr-10 pl-9"
@@ -236,12 +283,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <p className="text-muted-foreground text-xs">
               Get your API key from{' '}
               <a
-                href="https://openrouter.ai/keys"
+                href={
+                  localProvider === 'gemini'
+                    ? 'https://aistudio.google.com/apikey'
+                    : 'https://openrouter.ai/keys'
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
               >
-                openrouter.ai/keys
+                {localProvider === 'gemini'
+                  ? 'aistudio.google.com'
+                  : 'openrouter.ai/keys'}
               </a>
             </p>
           </div>

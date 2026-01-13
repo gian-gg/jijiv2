@@ -25,7 +25,13 @@ export const AVAILABLE_MODELS = [
 
 export type ModelId = (typeof AVAILABLE_MODELS)[number]['id'];
 
-// Error types for parsing in AI chat
+export const GEMINI_MODELS = [
+  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'Google' },
+  { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'Google' },
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google' },
+  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google' },
+] as const;
+
 export const AI_ERROR_TYPES = {
   RATE_LIMITED: 'RATE_LIMITED',
   INVALID_API_KEY: 'INVALID_API_KEY',
@@ -36,7 +42,6 @@ export const AI_ERROR_TYPES = {
 
 export type AIErrorType = (typeof AI_ERROR_TYPES)[keyof typeof AI_ERROR_TYPES];
 
-// AI Chat message generators
 export const AI_MESSAGES = {
   FIRST_MESSAGE: () => ({
     id: Date.now(),
@@ -49,7 +54,7 @@ export const AI_MESSAGES = {
     id: Date.now(),
     role: 'assistant' as const,
     content:
-      "You've been rate limited. Please wait a moment before sending another message, or consider upgrading your OpenRouter plan.",
+      "You've been rate limited. Please wait a moment before sending another message.",
     timestamp: new Date(),
   }),
   INVALID_API_KEY: () => ({
@@ -63,7 +68,7 @@ export const AI_MESSAGES = {
     id: Date.now(),
     role: 'assistant' as const,
     content:
-      'Insufficient credits on your OpenRouter account. Please add credits at openrouter.ai/credits or switch to a free model.',
+      'Insufficient credits or quota exceeded. Please check your API account or try a different model.',
     timestamp: new Date(),
   }),
   MODEL_UNAVAILABLE: () => ({
@@ -98,8 +103,11 @@ Extract the following fields:
 - paymentMethod: Choose from: ${PAYMENT_METHODS.join(', ')}. Use "Cash" if not specified.
 `.trim(),
   SYSTEM_PROMPT: (
-    userId: string
+    userId: string,
+    currency: string = 'USD'
   ) => `You are jiji, a helpful financial assistant. Your job is to help users track their transactions.
+
+The user's preferred currency is ${currency}. Use the appropriate currency symbol when discussing amounts.
 
 When a user mentions spending or earning money (like "coffee for $5", "lunch $15", "salary $3000"), you MUST use the extractTransaction tool to extract the transaction details.
 
@@ -135,7 +143,7 @@ CRITICAL RULES FOR SQL:
 Be concise. If the tool returns data, summarize it naturally for the user.`,
 };
 
-// Predefined feedback messages to save tokens
+// predefined feedback messages to save tokens
 export const AI_FEEDBACK = {
   SUCCESS: [
     "Got it! I've recorded your transaction.",
