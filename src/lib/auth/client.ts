@@ -23,4 +23,4 @@ export const signIn = async (email: string, password: string) => {
   }
 };
 
-export const { signOut } = createAuthClient();
+export const { signOut } = authClient;
