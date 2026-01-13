@@ -24,12 +24,10 @@ import {
   DEFAULT_TRANSACTION,
   PAYMENT_METHODS,
   TRANSACTION_TYPES,
-  AI_CONSTANT_MESSAGES,
 } from '@/constants/TRANSACTIONS';
 
-import { createTransaction } from '@/lib/db/transactions';
-import useSettingsStore from '@/stores/useSettingsStore';
 import { getCurrencySymbol } from '@/constants/SETTINGS';
+import useSettingsStore from '@/stores/useSettingsStore';
 import type { Transaction } from '@/types/transactions';
 import { Loader2, Trash2 } from 'lucide-react';
 

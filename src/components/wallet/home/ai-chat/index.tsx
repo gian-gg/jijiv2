@@ -1,17 +1,17 @@
 'use client';
 
-import { Transaction, useSettingsStore, useChatStore } from '@/stores';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { Transaction, useChatStore, useSettingsStore } from '@/stores';
+import { useEffect, useRef, useState } from 'react';
 
-import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport, UIMessage } from 'ai';
-import TransactionDialog from '@/components/wallet/home/transaction-dialog';
-import { createTransaction } from '@/lib/db/transactions';
+import { ChatInput } from '@/components/wallet/home/ai-chat/chat-input';
 import { ChatHeader } from '@/components/wallet/home/ai-chat/header';
 import { MessageList } from '@/components/wallet/home/ai-chat/message-list';
-import { ChatInput } from '@/components/wallet/home/ai-chat/chat-input';
+import TransactionDialog from '@/components/wallet/home/transaction-dialog';
 import { AI_FEEDBACK } from '@/constants/AI';
+import { createTransaction } from '@/lib/db/transactions';
 import { getAIErrorMessage } from '@/lib/helpers/ai-error';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport, UIMessage } from 'ai';
 
 export function AiChat() {
   const apiKey = useSettingsStore((state) => state.apiKey);
