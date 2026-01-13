@@ -28,10 +28,8 @@ import {
 } from '@/constants/TRANSACTIONS';
 
 import { createTransaction } from '@/lib/db/transactions';
-import { useChatStore } from '@/stores';
 import useSettingsStore from '@/stores/useSettingsStore';
 import { getCurrencySymbol } from '@/constants/SETTINGS';
-import type { Message } from '@/types/home';
 import type { Transaction } from '@/types/transactions';
 import { Loader2, Trash2 } from 'lucide-react';
 
@@ -58,7 +56,6 @@ const TransactionDialog = ({
   onCancel?: () => void;
   isSaving?: boolean;
 }) => {
-  const addMessage = useChatStore((state) => state.addMessage);
   const currency = useSettingsStore((state) => state.currency);
   const currencySymbol = getCurrencySymbol(currency);
 

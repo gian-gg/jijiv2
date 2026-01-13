@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { QUICK_ACTIONS } from '@/constants/TRANSACTIONS';
-import { Send } from 'lucide-react';
+import { Send, Square } from 'lucide-react';
 
 interface ChatInputProps {
   input: string;
@@ -9,6 +9,7 @@ interface ChatInputProps {
   isLoading: boolean;
   isConfigured: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onStop: () => void;
 }
 
 export function ChatInput({
@@ -17,6 +18,7 @@ export function ChatInput({
   isLoading,
   isConfigured,
   onSubmit,
+  onStop,
 }: ChatInputProps) {
   return (
     <div className="border-border border-t p-3">
@@ -50,13 +52,25 @@ export function ChatInput({
             disabled={isLoading || !isConfigured}
             className="flex-1 text-sm"
           />
-          <Button
-            type="submit"
-            size="sm"
-            disabled={isLoading || !input.trim() || !isConfigured}
-          >
-            <Send className="size-4" />
-          </Button>
+          {isLoading ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="destructive"
+              onClick={onStop}
+              title="Stop generating"
+            >
+              <Square className="size-4" />
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              size="sm"
+              disabled={!input.trim() || !isConfigured}
+            >
+              <Send className="size-4" />
+            </Button>
+          )}
         </div>
       </form>
     </div>

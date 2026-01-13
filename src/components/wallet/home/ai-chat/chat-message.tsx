@@ -4,6 +4,7 @@ import { AI_FEEDBACK } from '@/constants/AI';
 import { useSettingsStore } from '@/stores';
 import { getCurrencySymbol } from '@/constants/SETTINGS';
 import { ToolStatus } from './tool-status';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessageProps {
   message: UIMessage;
@@ -25,14 +26,18 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
         className={`max-w-[80%] space-y-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}
       >
         <div
-          className={`text-sm whitespace-pre-wrap ${
+          className={`text-sm ${
             m.role === 'user'
-              ? 'bg-primary text-primary-foreground border-primary border p-3'
-              : 'bg-card border-border border p-3'
+              ? 'bg-primary text-primary-foreground border-primary border p-3 whitespace-pre-wrap'
+              : 'bg-card border-border prose prose-sm dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 max-w-none border p-3'
           }`}
         >
           {m.parts?.map((part, i) => {
             if (part.type === 'text') {
+              // Render markdown for assistant, plain text for user
+              if (m.role === 'assistant') {
+                return <ReactMarkdown key={i}>{part.text}</ReactMarkdown>;
+              }
               return <span key={i}>{part.text}</span>;
             }
             // Skip step-start parts

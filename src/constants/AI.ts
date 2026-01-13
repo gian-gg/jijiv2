@@ -161,4 +161,9 @@ export const AI_FEEDBACK = {
     'Looking that up for you...',
     'Searching your history...',
   ],
+  STOPPED: [
+    'Stopped generating.',
+    'Generation stopped.',
+    'Alright, I stopped.',
+  ],
 } as const;
