@@ -1,4 +1,3 @@
-import type { ModelId } from '@/constants/AI';
 import { type CurrencyCode, DEFAULT_CURRENCY } from '@/constants/SETTINGS';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -11,10 +10,10 @@ export {
 } from '@/constants/SETTINGS';
 
 interface SettingsStore {
-  selectedModel: ModelId | null;
+  selectedModel: string | null;
   apiKey: string;
   currency: CurrencyCode;
-  setSelectedModel: (model: ModelId | null) => void;
+  setSelectedModel: (model: string | null) => void;
   setApiKey: (key: string) => void;
   setCurrency: (currency: CurrencyCode) => void;
   reset: () => void;

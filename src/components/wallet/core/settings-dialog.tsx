@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import useSettingsStore from '@/stores/useSettingsStore';
 import { CURRENCIES, type CurrencyCode } from '@/constants/SETTINGS';
-import { AVAILABLE_MODELS, type ModelId } from '@/constants/AI';
+import { AVAILABLE_MODELS } from '@/constants/AI';
 import { Eye, EyeOff, Key, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -39,32 +39,43 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const setCurrency = useSettingsStore((state) => state.setCurrency);
   const reset = useSettingsStore((state) => state.reset);
 
-  const [localModel, setLocalModel] = useState<ModelId | null>(selectedModel);
+  const [localModel, setLocalModel] = useState<string | null>(selectedModel);
+  const [isCustomModel, setIsCustomModel] = useState(false);
   const [localApiKey, setLocalApiKey] = useState(apiKey);
   const [localCurrency, setLocalCurrency] = useState<CurrencyCode>(currency);
   const [showApiKey, setShowApiKey] = useState(false);
+
+  // Check if current model is custom (not in predefined list)
+  const isModelCustom = (model: string | null) => {
+    if (!model) return false;
+    return !AVAILABLE_MODELS.some((m) => m.id === model);
+  };
 
   // Sync local state with store when dialog opens or store changes
   useEffect(() => {
     if (open) {
       setLocalModel(selectedModel);
+      setIsCustomModel(isModelCustom(selectedModel));
       setLocalApiKey(apiKey);
       setLocalCurrency(currency);
     }
   }, [open, selectedModel, apiKey, currency]);
 
-  const canSave = localApiKey.trim().length > 0 && localModel !== null;
+  const canSave =
+    localApiKey.trim().length > 0 &&
+    localModel !== null &&
+    localModel.trim().length > 0;
 
   const handleSave = () => {
     if (!localApiKey.trim()) {
       toast.error('Please enter an API key');
       return;
     }
-    if (!localModel) {
-      toast.error('Please select a model');
+    if (!localModel || !localModel.trim()) {
+      toast.error('Please select or enter a model');
       return;
     }
-    setSelectedModel(localModel);
+    setSelectedModel(localModel.trim());
     setApiKey(localApiKey.trim());
     setCurrency(localCurrency);
     toast.success('Settings saved');
@@ -74,6 +85,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const handleReset = () => {
     reset();
     setLocalModel(null);
+    setIsCustomModel(false);
     setLocalApiKey('');
     setLocalCurrency('USD');
     toast.success('Settings reset');
@@ -83,10 +95,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     if (isOpen) {
       // Reset local state when opening
       setLocalModel(selectedModel);
+      setIsCustomModel(isModelCustom(selectedModel));
       setLocalApiKey(apiKey);
       setLocalCurrency(currency);
     }
     onOpenChange(isOpen);
+  };
+
+  const handleModelSelect = (value: string) => {
+    if (value === '__custom__') {
+      setIsCustomModel(true);
+      setLocalModel('');
+    } else {
+      setIsCustomModel(false);
+      setLocalModel(value);
+    }
   };
 
   return (
@@ -108,26 +131,63 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <Label htmlFor="model">
               AI Model <span className="text-destructive">*</span>
             </Label>
-            <Select
-              value={localModel ?? ''}
-              onValueChange={(value) => setLocalModel(value as ModelId)}
-            >
-              <SelectTrigger id="model" className="w-full">
-                <SelectValue placeholder="Select a model" />
-              </SelectTrigger>
-              <SelectContent>
-                {AVAILABLE_MODELS.map((model) => (
-                  <SelectItem key={model.id} value={model.id}>
-                    <div className="flex items-center gap-2">
-                      <span>{model.name}</span>
-                      <span className="text-muted-foreground text-xs">
-                        ({model.provider})
-                      </span>
-                    </div>
+            {isCustomModel ? (
+              <div className="flex gap-2">
+                <Input
+                  id="model"
+                  placeholder="e.g. openai/gpt-4o-mini"
+                  value={localModel ?? ''}
+                  onChange={(e) => setLocalModel(e.target.value)}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setIsCustomModel(false);
+                    setLocalModel(null);
+                  }}
+                >
+                  Presets
+                </Button>
+              </div>
+            ) : (
+              <Select
+                value={localModel ?? ''}
+                onValueChange={handleModelSelect}
+              >
+                <SelectTrigger id="model" className="w-full">
+                  <SelectValue placeholder="Select a model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {AVAILABLE_MODELS.map((model) => (
+                    <SelectItem key={model.id} value={model.id}>
+                      <div className="flex items-center gap-2">
+                        <span>{model.name}</span>
+                        <span className="text-muted-foreground text-xs">
+                          ({model.provider})
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="__custom__">
+                    <span className="text-primary">+ Use custom model...</span>
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                </SelectContent>
+              </Select>
+            )}
+            <p className="text-muted-foreground text-xs">
+              Browse models at{' '}
+              <a
+                href="https://openrouter.ai/models"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                openrouter.ai/models
+              </a>
+            </p>
           </div>
 
           {/* API Key Input */}
