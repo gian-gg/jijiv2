@@ -98,3 +98,25 @@ Extract the following fields:
 - paymentMethod: Choose from: ${PAYMENT_METHODS.join(', ')}. Use "Cash" if not specified.
 `.trim(),
 };
+
+// Predefined feedback messages to save tokens
+export const AI_FEEDBACK = {
+  SUCCESS: [
+    "Got it! I've recorded your transaction.",
+    'Done! Transaction saved.',
+    "All set! I've added that for you.",
+    'Noted! Transaction recorded.',
+    "Perfect! I've logged that.",
+  ],
+  CANCEL: [
+    'No problem, transaction cancelled.',
+    "Okay, I won't save that.",
+    'Cancelled! Let me know if you need anything else.',
+    'Got it, transaction discarded.',
+  ],
+  EXTRACTING: [
+    'Let me get the details...',
+    'Extracting transaction info...',
+    'Just a moment...',
+  ],
+} as const;

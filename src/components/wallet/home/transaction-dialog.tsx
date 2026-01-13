@@ -37,15 +37,6 @@ import { Loader2, Trash2 } from 'lucide-react';
 
 export type TransactionDialogMode = 'new' | 'edit';
 
-interface TransactionDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  transaction: Transaction | null;
-  mode: TransactionDialogMode;
-  onSave?: (transaction: Transaction) => void;
-  onDelete?: (id: string) => void;
-}
-
 const TransactionDialog = ({
   open,
   onOpenChange,
@@ -53,29 +44,41 @@ const TransactionDialog = ({
   mode,
   onSave,
   onDelete,
-}: TransactionDialogProps) => {
+  onConfirm,
+  onCancel,
+  isSaving: externalIsSaving = false,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  transaction: Transaction | null | undefined;
+  mode: TransactionDialogMode;
+  onSave?: (transaction: Transaction) => void;
+  onDelete?: (id: string) => void;
+  onConfirm?: (transaction: Transaction) => void;
+  onCancel?: () => void;
+  isSaving?: boolean;
+}) => {
   const addMessage = useChatStore((state) => state.addMessage);
   const currency = useSettingsStore((state) => state.currency);
   const currencySymbol = getCurrencySymbol(currency);
 
   const [editedTransaction, setEditedTransaction] =
     useState<Transaction | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isInternalSaving, setIsInternalSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [confirmingUpdate, setConfirmingUpdate] = useState(false);
 
+  // Combined saving state (internal or external)
+  const isSaving = isInternalSaving || externalIsSaving;
+
   useEffect(() => {
-    if (transaction) {
-      setEditedTransaction({ ...transaction });
-    }
+    if (transaction) setEditedTransaction({ ...transaction });
   }, [transaction]);
 
   if (!transaction || !editedTransaction) return null;
 
   const isEditMode = mode === 'edit';
-
-  // Check if any field has changed
   const hasChanges =
     transaction.type !== editedTransaction.type ||
     transaction.amount !== editedTransaction.amount ||
@@ -85,44 +88,26 @@ const TransactionDialog = ({
     transaction.paymentMethod !== editedTransaction.paymentMethod;
 
   const handleSave = async (res: Transaction) => {
-    setIsSaving(true);
+    setIsInternalSaving(true);
+
+    const transactionData: Transaction = {
+      description: res.description,
+      amount: res.amount,
+      date: res.date,
+      type: res.type ?? DEFAULT_TRANSACTION.type,
+      category: res.category ?? DEFAULT_TRANSACTION.category,
+      paymentMethod: res.paymentMethod ?? DEFAULT_TRANSACTION.paymentMethod,
+    };
 
     if (isEditMode) {
       onSave?.(res);
       onOpenChange(false);
-    } else {
-      const transactionData: Transaction = {
-        id: crypto.randomUUID(),
-        description: res.description,
-        amount: res.amount,
-        date: res.date,
-        type: res.type ?? DEFAULT_TRANSACTION.type,
-        category: res.category ?? DEFAULT_TRANSACTION.category,
-        paymentMethod: res.paymentMethod ?? DEFAULT_TRANSACTION.paymentMethod,
-      };
-
-      const result = await createTransaction(transactionData);
-
-      if (result.success) {
-        const assistantMessage: Message = {
-          id: Date.now(),
-          role: 'assistant',
-          content: `Got it! I've added ${res.type === 'income' ? 'income' : 'expense'}: ${res.description} for ${currencySymbol}${Math.abs(res.amount).toFixed(2)} in ${res.category}.`,
-          timestamp: new Date(),
-        };
-        addMessage(assistantMessage);
-        onOpenChange(false);
-      } else {
-        addMessage({
-          id: Date.now(),
-          role: 'assistant',
-          content: 'Oops! Failed to save the transaction. Please try again.',
-          timestamp: new Date(),
-        });
-      }
+    } else if (onConfirm) {
+      // Don't close dialog - parent will close after async operation completes
+      onConfirm(transactionData);
     }
 
-    setIsSaving(false);
+    setIsInternalSaving(false);
   };
 
   const handleDelete = () => {
@@ -143,9 +128,7 @@ const TransactionDialog = ({
       setConfirmingUpdate(false);
       return;
     }
-    if (!isEditMode) {
-      addMessage(AI_CONSTANT_MESSAGES.CANCELLED_MESSAGE());
-    }
+    if (onCancel) onCancel();
     onOpenChange(false);
   };
 
