@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { QUICK_ACTIONS } from '@/constants/TRANSACTIONS';
 import { Send, Square } from 'lucide-react';
+import { useMemo } from 'react';
+import { useSettingsStore } from '@/stores';
+import { getDynamicSuggestions } from '@/lib/helpers/suggestions';
 
 interface ChatInputProps {
   input: string;
@@ -20,11 +22,19 @@ export function ChatInput({
   onSubmit,
   onStop,
 }: ChatInputProps) {
+  const currency = useSettingsStore((state) => state.currency);
+
+  // Generate dynamic suggestions based on time and currency
+  const suggestions = useMemo(
+    () => getDynamicSuggestions(currency),
+    [currency]
+  );
+
   return (
     <div className="border-border border-t p-3">
       {/* Quick Actions */}
       <div className="mb-3 flex flex-wrap gap-2">
-        {QUICK_ACTIONS.map((action) => (
+        {suggestions.map((action) => (
           <Button
             key={action}
             variant="outline"
