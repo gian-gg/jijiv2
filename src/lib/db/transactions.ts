@@ -206,3 +206,37 @@ export async function deleteTransaction(id: string) {
     return { success: false, error };
   }
 }
+
+export async function runRawQuery(sqlQuery: string) {
+  try {
+    await sessionGuard();
+
+    // Basic safety checks - readonly only
+    const lowerQuery = sqlQuery.toLowerCase().trim();
+    if (!lowerQuery.startsWith('select')) {
+      return { success: false, error: 'Only SELECT queries are allowed.' };
+    }
+    if (
+      lowerQuery.includes('insert') ||
+      lowerQuery.includes('update') ||
+      lowerQuery.includes('delete') ||
+      lowerQuery.includes('drop') ||
+      lowerQuery.includes('alter') ||
+      lowerQuery.includes('grant') ||
+      lowerQuery.includes('revoke')
+    ) {
+      return { success: false, error: 'Write operations are not allowed.' };
+    }
+
+    // Execute raw query
+    const result = await db.execute(sql.raw(sqlQuery));
+
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error('Error running raw query:', error);
+    return { success: false, error }; // Simplified error return
+  }
+}

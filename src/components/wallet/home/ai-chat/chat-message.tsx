@@ -1,8 +1,9 @@
 import { UIMessage } from 'ai';
-import { User, Sparkles, Loader2, Check, X } from 'lucide-react';
+import { User, Sparkles, Check, Database, Search } from 'lucide-react';
 import { AI_FEEDBACK } from '@/constants/AI';
 import { useSettingsStore } from '@/stores';
 import { getCurrencySymbol } from '@/constants/SETTINGS';
+import { ToolStatus } from './tool-status';
 
 interface ChatMessageProps {
   message: UIMessage;
@@ -24,10 +25,10 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
         className={`max-w-[80%] space-y-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}
       >
         <div
-          className={`border p-3 text-sm whitespace-pre-wrap ${
+          className={`text-sm whitespace-pre-wrap ${
             m.role === 'user'
-              ? 'bg-primary border-primary text-primary-foreground'
-              : 'bg-card border-border'
+              ? 'bg-primary text-primary-foreground border-primary border p-3'
+              : 'bg-card border-border border p-3'
           }`}
         >
           {m.parts?.map((part, i) => {
@@ -65,13 +66,12 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
                     msgIndex % AI_FEEDBACK.EXTRACTING.length
                   ];
                 return (
-                  <span
+                  <ToolStatus
                     key={i}
-                    className="text-muted-foreground flex items-center gap-2"
-                  >
-                    <Loader2 className="size-3 animate-spin" />
-                    {extractMsg}
-                  </span>
+                    state="loading"
+                    message={extractMsg}
+                    icon={Search}
+                  />
                 );
               }
 
@@ -87,18 +87,20 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
 
                 return (
                   <div key={i} className="space-y-2">
-                    <div className="flex items-center gap-2 text-green-600">
-                      <Check className="size-3" />
+                    <div className="flex items-center gap-2 px-1 text-xs font-medium text-green-600">
+                      <Check className="size-3.5" />
                       <span>{successMsg}</span>
                     </div>
-                    <div className="bg-muted/50 space-y-1 rounded p-2 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">
+                    <div className="bg-muted/40 border-border space-y-1.5 rounded-lg border p-3 text-xs">
+                      <div className="flex items-start justify-between">
+                        <span className="text-foreground/90 font-medium">
                           {tx.description}
                         </span>
                         <span
                           className={
-                            isExpense ? 'text-red-500' : 'text-green-500'
+                            isExpense
+                              ? 'font-mono text-red-500'
+                              : 'font-mono text-green-500'
                           }
                         >
                           {isExpense ? '-' : '+'}
@@ -116,15 +118,44 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
               const cancelMsg =
                 AI_FEEDBACK.CANCEL[msgIndex % AI_FEEDBACK.CANCEL.length];
               return (
-                <div
-                  key={i}
-                  className="text-muted-foreground flex items-center gap-2"
-                >
-                  <X className="size-3" />
-                  <span>{cancelMsg}</span>
-                </div>
+                <ToolStatus key={i} state="cancelled" message={cancelMsg} />
               );
             }
+
+            // Query tool invocation
+            if (part.type === 'tool-queryTransactions') {
+              const toolPart = part as {
+                type: string;
+                toolCallId: string;
+                state?: string;
+                output?: unknown;
+              };
+
+              // Get a consistent random message based on toolCallId
+              const msgIndex = toolPart.toolCallId.charCodeAt(
+                toolPart.toolCallId.length - 1
+              );
+
+              // Show querying state when tool is called but no result yet
+              if (toolPart.state !== 'result' && !toolPart.output) {
+                const queryMsg =
+                  AI_FEEDBACK.QUERYING[msgIndex % AI_FEEDBACK.QUERYING.length];
+                return (
+                  <ToolStatus
+                    key={i}
+                    state="loading"
+                    message={queryMsg}
+                    icon={Database}
+                    className="animate-pulse"
+                  />
+                );
+              }
+
+              // Once we have a result, we don't need to show anything for this tool
+              // The LLM will use the result to generate the text response
+              return null;
+            }
+
             return null;
           })}
         </div>
