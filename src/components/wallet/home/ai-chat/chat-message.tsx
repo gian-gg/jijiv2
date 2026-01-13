@@ -137,7 +137,7 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
               );
 
               // Show querying state when tool is called but no result yet
-              if (toolPart.state !== 'result' && !toolPart.output) {
+              if (toolPart.state !== 'output-available' || !toolPart.output) {
                 const queryMsg =
                   AI_FEEDBACK.QUERYING[msgIndex % AI_FEEDBACK.QUERYING.length];
                 return (

@@ -209,7 +209,7 @@ export async function deleteTransaction(id: string) {
 
 export async function runRawQuery(sqlQuery: string) {
   try {
-    await sessionGuard();
+    const session = await sessionGuard();
 
     // Basic safety checks - readonly only
     const lowerQuery = sqlQuery.toLowerCase().trim();
@@ -228,6 +228,14 @@ export async function runRawQuery(sqlQuery: string) {
       return { success: false, error: 'Write operations are not allowed.' };
     }
 
+    const userId = session.user.id;
+    if (!sqlQuery.includes(userId)) {
+      return {
+        success: false,
+        error: 'Query must filter by your user_id for security.',
+      };
+    }
+
     // Execute raw query
     const result = await db.execute(sql.raw(sqlQuery));
 
@@ -237,6 +245,9 @@ export async function runRawQuery(sqlQuery: string) {
     };
   } catch (error) {
     console.error('Error running raw query:', error);
-    return { success: false, error }; // Simplified error return
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Query failed',
+    };
   }
 }
