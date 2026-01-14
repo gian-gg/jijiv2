@@ -11,7 +11,7 @@ const MadeWith = () => {
       </span>{' '}
       by{' '}
       <Link
-        href={ROUTES.GITHUB}
+        href={ROUTES.EXTERNAL.GITHUB_USER}
         target="_blank"
         rel="noreferrer"
         className="text-foreground hover:text-primary font-medium underline underline-offset-4 transition-colors"
