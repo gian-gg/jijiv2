@@ -1,5 +1,5 @@
 import { UIMessage } from 'ai';
-import { User, Sparkles, Check, Database, Search } from 'lucide-react';
+import { Check, Database, Search } from 'lucide-react';
 import { AI_FEEDBACK } from '@/constants/AI';
 import { useSettingsStore } from '@/stores';
 import { getCurrencySymbol } from '@/constants/SETTINGS';
@@ -15,13 +15,12 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+      className={`flex flex-col gap-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}
     >
-      {m.role === 'assistant' && (
-        <div className="bg-primary/10 border-primary/20 flex size-8 flex-shrink-0 items-center justify-center border">
-          <Sparkles className="text-primary size-3" />
-        </div>
-      )}
+      {/* Role label */}
+      <span className="text-muted-foreground px-1 text-[10px] font-medium tracking-wider uppercase">
+        {m.role === 'user' ? 'You' : 'jijiv2'}
+      </span>
       <div
         className={`max-w-[80%] space-y-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}
       >
@@ -165,11 +164,6 @@ export function ChatMessage({ message: m }: ChatMessageProps) {
           })}
         </div>
       </div>
-      {m.role === 'user' && (
-        <div className="bg-primary/10 border-primary/20 flex size-8 flex-shrink-0 items-center justify-center border">
-          <User className="text-primary size-3" />
-        </div>
-      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { authClient } from '@/lib/auth/client';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 const GoogleButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,14 +29,16 @@ const GoogleButton = () => {
   };
 
   return (
-    <button
-      className="group flex w-full max-w-[240px] cursor-pointer items-center justify-center gap-3 rounded-lg bg-black/40 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 ease-out hover:bg-black/60 active:scale-[0.98] disabled:cursor-wait"
+    <Button
+      variant="outline"
+      size="lg"
+      className="group w-full max-w-[280px] gap-3"
       onClick={handleClick}
       disabled={isLoading}
     >
       {isLoading ? (
         <svg
-          className="size-5 animate-spin text-white/50"
+          className="size-5 animate-spin"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -78,7 +81,7 @@ const GoogleButton = () => {
         </svg>
       )}
       <span>Continue with Google</span>
-    </button>
+    </Button>
   );
 };
 

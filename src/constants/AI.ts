@@ -105,7 +105,7 @@ Extract the following fields:
   SYSTEM_PROMPT: (
     userId: string,
     currency: string = 'USD'
-  ) => `You are jiji, a helpful financial assistant. Your job is to help users track their transactions.
+  ) => `You are jijiv2, a helpful financial assistant. Your job is to help users track their transactions.
 
 The user's preferred currency is ${currency}. Use the appropriate currency symbol when discussing amounts.
 

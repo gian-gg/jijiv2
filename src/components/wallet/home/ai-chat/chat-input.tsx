@@ -33,7 +33,7 @@ export function ChatInput({
   return (
     <div className="border-border border-t p-3">
       {/* Quick Actions */}
-      <div className="mb-3 flex flex-wrap gap-2">
+      <div className="scrollbar-hide -mx-3 mb-3 flex gap-2 overflow-x-auto px-3">
         {suggestions.map((action) => (
           <Button
             key={action}
@@ -41,7 +41,7 @@ export function ChatInput({
             size="sm"
             onClick={() => setInput(action)}
             disabled={!isConfigured || isLoading}
-            className="text-muted-foreground hover:text-foreground hover:border-primary/30 h-7 text-xs transition-all"
+            className="text-muted-foreground hover:text-foreground hover:border-primary/30 h-7 shrink-0 text-xs transition-all"
           >
             {action}
           </Button>

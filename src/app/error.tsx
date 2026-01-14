@@ -1,17 +1,30 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import ROUTES from '@/constants/ROUTES';
 
-export default function NotFound() {
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-6">
       <div className="flex max-w-md flex-col items-center gap-8 text-center">
-        {/* 404 Visual */}
+        {/* Error Visual */}
         <div className="relative">
-          {/* Large 404 */}
+          {/* Large error code */}
           <div className="border-primary/20 relative border p-8">
             <h1 className="text-primary font-mono text-6xl font-bold tracking-tighter tabular-nums">
-              404
+              500
             </h1>
 
             {/* Decorative corner brackets */}
@@ -25,30 +38,32 @@ export default function NotFound() {
         {/* Content */}
         <div className="flex flex-col gap-3">
           <h2 className="text-foreground text-2xl font-bold tracking-tight">
-            Page Not Found
+            Something Went Wrong
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            The page you&apos;re looking for doesn&apos;t exist or has been
-            moved. Check the URL or return to the homepage.
+            An unexpected error occurred. You can try again or return to the
+            homepage.
           </p>
         </div>
 
         {/* Actions */}
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-center">
-          <Button asChild className="w-full sm:w-auto">
-            <Link href={ROUTES.ROOT}>Go Home</Link>
+          <Button onClick={reset} className="w-full sm:w-auto">
+            Try Again
           </Button>
           <Button asChild variant="outline" className="w-full sm:w-auto">
-            <Link href={ROUTES.WALLET.ROOT}>Open Wallet</Link>
+            <Link href={ROUTES.ROOT}>Go Home</Link>
           </Button>
         </div>
 
         {/* Error code detail */}
-        <div className="bg-muted/30 border-border mt-4 border p-3">
-          <code className="text-muted-foreground font-mono text-xs">
-            ERROR_CODE: HTTP_404_NOT_FOUND
-          </code>
-        </div>
+        {error.digest && (
+          <div className="bg-muted/30 border-border mt-4 border p-3">
+            <code className="text-muted-foreground font-mono text-xs">
+              ERROR_DIGEST: {error.digest}
+            </code>
+          </div>
+        )}
       </div>
 
       {/* Background decorative elements */}

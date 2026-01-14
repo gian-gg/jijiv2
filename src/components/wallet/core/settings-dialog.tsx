@@ -24,6 +24,7 @@ import { AVAILABLE_MODELS, GEMINI_MODELS } from '@/constants/AI';
 import { Eye, EyeOff, Key, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import ROUTES from '@/constants/ROUTES';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -130,7 +131,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
             All configurations are stored client-side only.{' '}
-            <a href="#" className="text-primary hover:underline">
+            <a
+              href={ROUTES.PRIVACY}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
               Learn more
             </a>
           </DialogDescription>
