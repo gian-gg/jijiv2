@@ -83,10 +83,12 @@ export function AiChat() {
     }
   }, [storedMessages, setMessages]);
 
-  // Sync messages to Zustand store for persistence
+  // Sync messages to Zustand store for persistence (keep last 5 only)
   useEffect(() => {
     if (messages.length > 0) {
-      setStoredMessages(messages);
+      // Keep only the last 5 messages to prevent token bloat
+      const truncatedMessages = messages.slice(-5);
+      setStoredMessages(truncatedMessages);
     }
   }, [messages, setStoredMessages]);
 

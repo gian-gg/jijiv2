@@ -45,15 +45,15 @@ export function Hero() {
         <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] tracking-widest uppercase">
           <div className="text-muted-foreground/60 flex items-center gap-2">
             <span className="bg-primary size-1" />
-            <span>100% Open Source</span>
+            <span>Free Tier Friendly</span>
+          </div>
+          <div className="text-muted-foreground/60 flex items-center gap-2">
+            <span className="bg-primary size-1" />
+            <span>Cost Efficient</span>
           </div>
           <div className="text-muted-foreground/60 flex items-center gap-2">
             <span className="bg-primary size-1" />
             <span>Bring Your Own Key</span>
-          </div>
-          <div className="text-muted-foreground/60 flex items-center gap-2">
-            <span className="bg-primary size-1" />
-            <span>Dual AI Providers</span>
           </div>
         </div>
       </div>
