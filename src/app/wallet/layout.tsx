@@ -26,8 +26,8 @@ export default async function DashboardLayout({
       <div className="border-primary/10 pointer-events-none absolute right-10 bottom-20 h-24 w-24 border" />
 
       {/* Centered content container */}
-      <div className="relative z-10 flex min-h-screen min-w-screen flex-col items-center justify-center overflow-hidden p-2 md:p-6">
-        <div className="border-primary/20 bg-card flex h-[98vh] w-full max-w-2xl flex-col overflow-hidden border md:h-[90vh]">
+      <div className="relative z-10 flex min-h-screen min-w-screen flex-col items-center justify-center overflow-hidden p-0 md:p-8">
+        <div className="border-primary/20 bg-card flex h-[100dvh] w-full max-w-2xl flex-col overflow-hidden border-x-0 border-y md:h-[90vh] md:border">
           {/* Subtle gradient background */}
           <div className="gradient-purple-radial pointer-events-none absolute inset-0 opacity-20" />
 

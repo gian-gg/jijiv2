@@ -19,7 +19,13 @@ export function CurrencyAmount({
   const currency = useSettingsStore((state) => state.currency);
   const symbol = getCurrencySymbol(currency);
 
-  const sign = showSign ? (type === 'income' ? '+' : '-') : '';
+  const sign = showSign
+    ? type === 'income'
+      ? '+'
+      : '-'
+    : amount < 0
+      ? '-'
+      : '';
 
   return (
     <span className={className}>

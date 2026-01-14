@@ -1,6 +1,6 @@
 {
-  "name": "jiji",
-  "version": "0.1.0",
+  "name": "jijiv2",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

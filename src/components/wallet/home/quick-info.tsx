@@ -41,31 +41,31 @@ export async function QuickInfo() {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-2 md:gap-3">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
           <div
             key={stat.title}
-            className="bg-background/40 border-border relative overflow-hidden border p-3"
+            className="bg-background/40 border-border relative overflow-hidden border p-2 md:p-3"
           >
-            <div className="relative flex flex-col gap-2">
+            <div className="relative flex flex-col gap-1 md:gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase md:text-xs">
                   {stat.title}
                 </span>
                 <div
-                  className={`flex size-6 items-center justify-center border ${stat.iconBg} ${stat.iconBorder}`}
+                  className={`flex size-6 items-center justify-center border md:size-8 ${stat.iconBg} ${stat.iconBorder}`}
                 >
-                  <Icon className={`size-3 ${stat.iconColor}`} />
+                  <Icon className={`size-3 md:size-4 ${stat.iconColor}`} />
                 </div>
               </div>
 
-              <div className="text-lg leading-none font-bold tabular-nums">
+              <div className="text-sm leading-none font-bold tabular-nums md:text-lg">
                 <CurrencyAmount amount={stat.amount} />
               </div>
 
-              <div className="text-muted-foreground text-xs">
+              <div className="text-muted-foreground hidden text-[10px] md:block md:text-xs">
                 {stat.description}
               </div>
             </div>
