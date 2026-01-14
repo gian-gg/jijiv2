@@ -36,6 +36,8 @@ export default function UserComponent({ user }: { user: User }) {
     toast.promise(signOut(), {
       loading: 'Signing out...',
       success: () => {
+        localStorage.clear();
+        sessionStorage.clear();
         router.push(ROUTES.ROOT);
         return 'Signed out successfully!';
       },
