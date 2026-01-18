@@ -3,9 +3,9 @@ import type { Transaction } from '@/types/transactions';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 /**
- * Transaction categories for expense and income classification
+ * Transaction categories for expense classification
  */
-export const CATEGORIES = [
+export const EXPENSE_CATEGORIES = [
   'Food & Dining',
   'Transportation',
   'Shopping',
@@ -15,10 +15,29 @@ export const CATEGORIES = [
   'Education',
   'Travel',
   'Groceries',
+  'Personal Care',
+  'Other',
+] as const;
+
+/**
+ * Transaction categories for income classification
+ */
+export const INCOME_CATEGORIES = [
   'Salary',
   'Freelance',
+  'Business',
   'Investment',
+  'Gift',
+  'Refund',
   'Other',
+] as const;
+
+/**
+ * Combined categories for backward compatibility
+ */
+export const CATEGORIES = [
+  ...EXPENSE_CATEGORIES,
+  ...INCOME_CATEGORIES,
 ] as const;
 
 /**

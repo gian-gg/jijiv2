@@ -87,7 +87,11 @@ export const AI_MESSAGES = {
   }),
 };
 
-import { CATEGORIES, PAYMENT_METHODS } from './TRANSACTIONS';
+import {
+  EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
+  PAYMENT_METHODS,
+} from './TRANSACTIONS';
 
 // AI Prompts for various actions
 export const AI_PROMPTS = {
@@ -96,7 +100,9 @@ export const AI_PROMPTS = {
 You are a financial assistant that extracts transaction details from natural language.
 Extract the following fields:
 - type: Must be exactly "income" or "expense" (spending money = expense, receiving money = income)
-- category: Choose from: ${CATEGORIES.join(', ')}
+- category: Choose from the appropriate list:
+  * For expenses: ${EXPENSE_CATEGORIES.join(', ')}
+  * For income: ${INCOME_CATEGORIES.join(', ')}
 - amount: The numeric amount (positive number, no currency symbols)
 - description: Brief description of what the transaction is for. It should be short and concise. Something meaningful and coherent.
 - date: Date in YYYY-MM-DD format. Use today's date (${currentDate}) if not specified.
@@ -110,7 +116,8 @@ Extract the following fields:
 TRANSACTION EXTRACTION:
 When users mention spending/earning (e.g., "coffee $5", "salary $3000"), use extractTransaction tool.
 - Type: "income" or "expense"
-- Categories: ${CATEGORIES.join(', ')}
+- Expense Categories: ${EXPENSE_CATEGORIES.join(', ')}
+- Income Categories: ${INCOME_CATEGORIES.join(', ')}
 - Payment: ${PAYMENT_METHODS.join(', ')} (default: Cash)
 - Date: YYYY-MM-DD (default: ${new Date().toISOString().split('T')[0]})
 

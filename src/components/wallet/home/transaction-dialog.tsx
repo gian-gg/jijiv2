@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  CATEGORIES,
+  EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
   DEFAULT_TRANSACTION,
   PAYMENT_METHODS,
   TRANSACTION_TYPES,
@@ -131,7 +132,24 @@ const TransactionDialog = ({
     field: K,
     value: Transaction[K]
   ) => {
-    setEditedTransaction((prev) => (prev ? { ...prev, [field]: value } : null));
+    setEditedTransaction((prev) => {
+      if (!prev) return null;
+
+      const updated = { ...prev, [field]: value };
+
+      // If switching transaction type, reset category if it's not valid for the new type
+      if (field === 'type') {
+        const newCategories =
+          value === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+        const currentCategory = prev.category;
+
+        if (!(newCategories as readonly string[]).includes(currentCategory)) {
+          updated.category = 'Other';
+        }
+      }
+
+      return updated;
+    });
   };
 
   return (
@@ -234,7 +252,10 @@ const TransactionDialog = ({
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map((cat) => (
+                  {(editedTransaction.type === 'expense'
+                    ? EXPENSE_CATEGORIES
+                    : INCOME_CATEGORIES
+                  ).map((cat) => (
                     <SelectItem key={cat} value={cat}>
                       {cat}
                     </SelectItem>
